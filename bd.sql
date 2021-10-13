@@ -20,8 +20,10 @@ USE `mydb` ;
 CREATE TABLE IF NOT EXISTS `mydb`.`Usuarios` (
   `idUsuario` INT NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
+  `apellidoP` VARCHAR(45) NOT NULL,
+  `apellidoM` VARCHAR(45) NOT NULL,
   `correo` VARCHAR(45) NOT NULL,
-  `clave` CHAR(32) NOT NULL,
+  `clave` CHAR(64) NOT NULL,
   `pais` VARCHAR(45) NULL,
   `estado` VARCHAR(45) NULL,
   `escuela` VARCHAR(45) NULL,
@@ -93,12 +95,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Grupos` (
   `idGrupo` INT NOT NULL,
-  `encargado` INT NOT NULL,
-  `codigoGrupo` VARCHAR(10) NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `docente` INT NOT NULL,
+  `codigoClase` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`idGrupo`),
-  INDEX `fk_Grupo_Usuarios1_idx` (`encargado` ASC) VISIBLE,
+  INDEX `fk_Grupo_Usuarios1_idx` (`docente` ASC) VISIBLE,
   CONSTRAINT `fk_Grupo_Usuarios1`
-    FOREIGN KEY (`encargado`)
+    FOREIGN KEY (`docente`)
     REFERENCES `mydb`.`Usuarios` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
