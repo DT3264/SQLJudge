@@ -23,9 +23,14 @@ export class NavMenu extends Component {
             </ul>
         );
         loginSection = (
-            <a class="btn btn-light" type="submit" href="./login.html">
-                Log in
-            </a>
+            <div>
+                <Link class="btn btn-light" type="submit" to="/login">
+                    Iniciar Sesion
+                </Link>
+                <Link class="btn btn-light" type="submit" to="/registro">
+                    Registrarse
+                </Link>
+            </div>
         );
     }
 
@@ -60,11 +65,20 @@ export class NavMenu extends Component {
                 <li class="nav-item">
                     <Link className="nav-link" to="/notFound">Problemset</Link>
                 </li>
-                <li class="nav-item">
+                <li className="nav-item">
                     <Link className="nav-link" to="/notFound">Scoreboard</Link>
                 </li>
-                <li class="nav-item">
-                    <Link className="nav-link" to="/notFound">Generar Codigo Registro</Link>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/generar-codigos">Generar Codigo Registro</Link>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuarios
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><Link className="dropdown-item" to="/lista-usuarios">Ver Usuarios</Link></li>
+                        <li><Link className="dropdown-item" to="/fetch-data">Crear Docente</Link></li>
+                    </ul>
                 </li>
             </ul>
         );
@@ -85,7 +99,7 @@ export class NavMenu extends Component {
                     >
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <Link className="navbar-brand" to="/counter">SQL Judge</Link>
+                    <Link className="navbar-brand" to="/">SQL Judge</Link>
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                         {listOfLinks}
                         <form class="d-flex">

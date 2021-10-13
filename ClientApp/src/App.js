@@ -7,6 +7,10 @@ import { Counter } from './components/Counter';
 
 import './custom.css'
 import PageNotFound from './components/PageNotFound';
+import GenerarCodigoRegistro from './components/GenerarCodigoRegistro';
+import Login from './components/Login';
+import Registro from './components/Registro';
+import ListaUsuarios from './components/ListaUsuarios';
 
 export default class App extends Component {
   static displayName = App.name;
@@ -19,6 +23,10 @@ export default class App extends Component {
             <Route path='/counter' component={Counter} />
             <Route path='/fetch-data' component={FetchData} />
             <Route path='/notFound' component={PageNotFound}/>
+            <Route path='/generar-codigos' component={GenerarCodigoRegistro}/>
+            <Route path='/login' component={Login}/>
+            <Route path='/registro' component={Registro}/>
+            <Route path='/lista-usuarios' component={ListaUsuarios}/>
             <Route path='*' component={PageNotFound}/>
         </Switch>
       </Layout>
