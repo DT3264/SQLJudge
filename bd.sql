@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Envios` (
   `idEnvio` INT NOT NULL,
   `idUsuario` INT NOT NULL,
   `idProblema` INT NOT NULL,
-  `fecha` DATETIME NOT NULL DEFAULT 'now()',
+  `fecha` DATETIME NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
   `veredicto` ENUM('AC', 'WA', 'RE') NOT NULL,
   `codigo` TEXT NOT NULL,
   `Respuesta` TEXT NOT NULL,
