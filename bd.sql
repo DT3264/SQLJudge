@@ -5,19 +5,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema SQLJudge
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `SQLJudge` ;
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema SQLJudge
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `SQLJudge` DEFAULT CHARACTER SET utf8 ;
+USE `SQLJudge` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`Usuarios`
+-- Table `SQLJudge`.`Usuarios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Usuarios` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`Usuarios` (
   `idUsuario` INT NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
   `apellidoP` VARCHAR(45) NOT NULL,
@@ -33,9 +34,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Categorias`
+-- Table `SQLJudge`.`Categorias`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Categorias` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`Categorias` (
   `idCategoria` INT NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idCategoria`))
@@ -43,9 +44,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Problemas`
+-- Table `SQLJudge`.`Problemas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Problemas` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`Problemas` (
   `idProblema` INT NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
   `descripcion` TEXT NOT NULL,
@@ -57,20 +58,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Problemas` (
   INDEX `fk_Problemas_Categorias1_idx` (`categoria` ASC) VISIBLE,
   CONSTRAINT `fk_Problemas_Categorias1`
     FOREIGN KEY (`categoria`)
-    REFERENCES `mydb`.`Categorias` (`idCategoria`)
+    REFERENCES `SQLJudge`.`Categorias` (`idCategoria`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Envios`
+-- Table `SQLJudge`.`Envios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Envios` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`Envios` (
   `idEnvio` INT NOT NULL,
   `idUsuario` INT NOT NULL,
   `idProblema` INT NOT NULL,
-  `fecha` DATETIME NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
+  `fecha` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `veredicto` ENUM('AC', 'WA', 'RE') NOT NULL,
   `codigo` TEXT NOT NULL,
   `Respuesta` TEXT NOT NULL,
@@ -79,21 +80,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Envios` (
   INDEX `fk_Usuarios_has_Problemas_Usuarios_idx` (`idUsuario` ASC) VISIBLE,
   CONSTRAINT `fk_Usuarios_has_Problemas_Usuarios`
     FOREIGN KEY (`idUsuario`)
-    REFERENCES `mydb`.`Usuarios` (`idUsuario`)
+    REFERENCES `SQLJudge`.`Usuarios` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Usuarios_has_Problemas_Problemas1`
     FOREIGN KEY (`idProblema`)
-    REFERENCES `mydb`.`Problemas` (`idProblema`)
+    REFERENCES `SQLJudge`.`Problemas` (`idProblema`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Grupos`
+-- Table `SQLJudge`.`Grupos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Grupos` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`Grupos` (
   `idGrupo` INT NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
   `docente` INT NOT NULL,
@@ -102,16 +103,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Grupos` (
   INDEX `fk_Grupo_Usuarios1_idx` (`docente` ASC) VISIBLE,
   CONSTRAINT `fk_Grupo_Usuarios1`
     FOREIGN KEY (`docente`)
-    REFERENCES `mydb`.`Usuarios` (`idUsuario`)
+    REFERENCES `SQLJudge`.`Usuarios` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`RegistroGrupo`
+-- Table `SQLJudge`.`RegistroGrupo`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`RegistroGrupo` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`RegistroGrupo` (
   `idUsuario` INT NOT NULL,
   `idGrupo` INT NOT NULL,
   PRIMARY KEY (`idUsuario`, `idGrupo`),
@@ -119,21 +120,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`RegistroGrupo` (
   INDEX `fk_Usuarios_has_Grupo_Usuarios1_idx` (`idUsuario` ASC) VISIBLE,
   CONSTRAINT `fk_Usuarios_has_Grupo_Usuarios1`
     FOREIGN KEY (`idUsuario`)
-    REFERENCES `mydb`.`Usuarios` (`idUsuario`)
+    REFERENCES `SQLJudge`.`Usuarios` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Usuarios_has_Grupo_Grupo1`
     FOREIGN KEY (`idGrupo`)
-    REFERENCES `mydb`.`Grupos` (`idGrupo`)
+    REFERENCES `SQLJudge`.`Grupos` (`idGrupo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Tareas`
+-- Table `SQLJudge`.`Tareas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Tareas` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`Tareas` (
   `idTarea` INT NOT NULL,
   `idGrupo` INT NOT NULL,
   `fechaLimite` DATETIME NOT NULL,
@@ -142,16 +143,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Tareas` (
   INDEX `fk_Tareas_Grupos1_idx` (`idGrupo` ASC) VISIBLE,
   CONSTRAINT `fk_Tareas_Grupos1`
     FOREIGN KEY (`idGrupo`)
-    REFERENCES `mydb`.`Grupos` (`idGrupo`)
+    REFERENCES `SQLJudge`.`Grupos` (`idGrupo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ProblemasTareas`
+-- Table `SQLJudge`.`ProblemasTareas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ProblemasTareas` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`ProblemasTareas` (
   `idTarea` INT NOT NULL,
   `idProblema` INT NOT NULL,
   PRIMARY KEY (`idTarea`, `idProblema`),
@@ -159,21 +160,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ProblemasTareas` (
   INDEX `fk_Tareas_has_Problemas_Tareas1_idx` (`idTarea` ASC) VISIBLE,
   CONSTRAINT `fk_Tareas_has_Problemas_Tareas1`
     FOREIGN KEY (`idTarea`)
-    REFERENCES `mydb`.`Tareas` (`idTarea`)
+    REFERENCES `SQLJudge`.`Tareas` (`idTarea`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Tareas_has_Problemas_Problemas1`
     FOREIGN KEY (`idProblema`)
-    REFERENCES `mydb`.`Problemas` (`idProblema`)
+    REFERENCES `SQLJudge`.`Problemas` (`idProblema`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`CodigosRegistro`
+-- Table `SQLJudge`.`CodigosRegistro`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`CodigosRegistro` (
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`CodigosRegistro` (
   `idCodigoRegistro` INT NOT NULL,
   `codigo` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`idCodigoRegistro`))
