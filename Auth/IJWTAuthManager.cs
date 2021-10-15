@@ -7,6 +7,6 @@ namespace SQL_Judge
 {
     public interface IJWTAuthManager
     {
-        string Authenticate(string user, string password);
+        AuthResponse Authenticate(string user, string password);
     }
 }
