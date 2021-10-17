@@ -19,6 +19,7 @@ namespace SQL_Judge.BD
         public string ApellidoP { get; set; }
         public string ApellidoM { get; set; }
         public string Correo { get; set; }
+        public string Usuario1 { get; set; }
         public string Clave { get; set; }
         public string Pais { get; set; }
         public string Estado { get; set; }

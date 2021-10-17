@@ -19,11 +19,12 @@ USE `SQLJudge` ;
 -- Table `SQLJudge`.`Usuarios`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`Usuarios` (
-  `idUsuario` INT NOT NULL,
+  `idUsuario` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `apellidoP` VARCHAR(45) NOT NULL,
   `apellidoM` VARCHAR(45) NOT NULL,
   `correo` VARCHAR(45) NOT NULL,
+  `usuario` VARCHAR(32) NOT NULL,
   `clave` CHAR(64) NOT NULL,
   `pais` VARCHAR(45) NULL,
   `estado` VARCHAR(45) NULL,
@@ -37,7 +38,7 @@ ENGINE = InnoDB;
 -- Table `SQLJudge`.`Categorias`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`Categorias` (
-  `idCategoria` INT NOT NULL,
+  `idCategoria` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idCategoria`))
 ENGINE = InnoDB;
@@ -47,7 +48,7 @@ ENGINE = InnoDB;
 -- Table `SQLJudge`.`Problemas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`Problemas` (
-  `idProblema` INT NOT NULL,
+  `idProblema` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `descripcion` TEXT NOT NULL,
   `solucion` TEXT NOT NULL,
@@ -68,7 +69,7 @@ ENGINE = InnoDB;
 -- Table `SQLJudge`.`Envios`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`Envios` (
-  `idEnvio` INT NOT NULL,
+  `idEnvio` INT NOT NULL AUTO_INCREMENT,
   `idUsuario` INT NOT NULL,
   `idProblema` INT NOT NULL,
   `fecha` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -95,7 +96,7 @@ ENGINE = InnoDB;
 -- Table `SQLJudge`.`Grupos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`Grupos` (
-  `idGrupo` INT NOT NULL,
+  `idGrupo` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `docente` INT NOT NULL,
   `codigoClase` VARCHAR(10) NOT NULL,
@@ -135,7 +136,7 @@ ENGINE = InnoDB;
 -- Table `SQLJudge`.`Tareas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`Tareas` (
-  `idTarea` INT NOT NULL,
+  `idTarea` INT NOT NULL AUTO_INCREMENT,
   `idGrupo` INT NOT NULL,
   `fechaLimite` DATETIME NOT NULL,
   `fechaAsignacion` DATETIME NOT NULL,
@@ -175,7 +176,7 @@ ENGINE = InnoDB;
 -- Table `SQLJudge`.`CodigosRegistro`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`CodigosRegistro` (
-  `idCodigoRegistro` INT NOT NULL,
+  `idCodigoRegistro` INT NOT NULL AUTO_INCREMENT,
   `codigo` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`idCodigoRegistro`))
 ENGINE = InnoDB;

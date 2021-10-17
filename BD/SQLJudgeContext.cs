@@ -318,6 +318,11 @@ namespace SQL_Judge.BD
                     .IsRequired()
                     .HasColumnType("enum('Admin','Alumno')")
                     .HasColumnName("tipo");
+
+                entity.Property(e => e.Usuario1)
+                    .IsRequired()
+                    .HasMaxLength(32)
+                    .HasColumnName("usuario");
             });
 
             OnModelCreatingPartial(modelBuilder);
