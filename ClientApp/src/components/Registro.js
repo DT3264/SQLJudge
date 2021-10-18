@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router";
 import "./General.css";
 import "./Validaciones.js";
 import Validaciones from "./Validaciones.js";
@@ -88,6 +89,8 @@ class Registro extends React.Component {
 
         // connect to the backend
         console.log(esPosible);
+        sessionStorage.removeItem("tipoUsuario");
+        this.props.history.push("/login");
     };
 
     render() {
@@ -204,4 +207,4 @@ class Registro extends React.Component {
     }
 }
 
-export default Registro;
+export default withRouter(Registro);
