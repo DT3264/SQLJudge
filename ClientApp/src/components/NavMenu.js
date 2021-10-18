@@ -1,9 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 import "./NavMenu.css";
 
-export class NavMenu extends Component {
+class NavMenu extends Component {
     static displayName = NavMenu.name;
+
+    logOut = () => {
+        sessionStorage.removeItem("usuario");
+        sessionStorage.removeItem("tipoUsuario");
+        sessionStorage.removeItem("token");
+        this.props.history.push("/");
+    };
 
     render() {
         var listOfLinks;
@@ -43,7 +51,7 @@ export class NavMenu extends Component {
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            Andros
+                            {this.props.usuario}
                         </a>
                         <ul
                             className="dropdown-menu dropdown-menu-end"
@@ -58,12 +66,12 @@ export class NavMenu extends Component {
                                 </Link>
                             </li>
                             <li>
-                                <Link
+                                <button
                                     className="dropdown-item"
-                                    to="/fetch-data"
+                                    onClick={this.logOut}
                                 >
                                     Cerrar
-                                </Link>
+                                </button>
                             </li>
                         </ul>
                     </li>
@@ -168,3 +176,5 @@ export class NavMenu extends Component {
         );
     }
 }
+
+export default withRouter(NavMenu);
