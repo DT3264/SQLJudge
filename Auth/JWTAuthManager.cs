@@ -13,7 +13,6 @@ namespace SQL_Judge
 {
     public class JWTAuthManager : IJWTAuthManager
     {
-        private readonly IDictionary<string, string> users = new Dictionary<string, string> { { "test1", "password1" }, { "test2", "password2" } };
 
         private readonly string tokenKey;
 
@@ -46,7 +45,7 @@ namespace SQL_Judge
             using (SQLJudgeContext context = new SQLJudgeContext())
             {
                 var usuariosBD = context.Usuarios.ToList();
-                usuario = usuariosBD.FirstOrDefault(u => u.Correo == username && isSamePassword(password, u.Clave));
+                usuario = usuariosBD.FirstOrDefault(u => u.Usuario1 == username && isSamePassword(password, u.Clave));
             }
 
             if (usuario == null) return null;
@@ -57,7 +56,7 @@ namespace SQL_Judge
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Email, usuario.Correo),
+                    new Claim(ClaimTypes.Name, usuario.Usuario1),
                     new Claim(ClaimTypes.Role, usuario.Tipo),
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
@@ -67,7 +66,7 @@ namespace SQL_Judge
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return new AuthResponse() { 
-                correo = usuario.Correo,
+                usuario = usuario.Usuario1,
                 tipo = usuario.Tipo,
                 token = tokenHandler.WriteToken(token)
             };

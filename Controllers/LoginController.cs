@@ -25,13 +25,13 @@ namespace SQL_Judge.Controllers
         /// <summary>
         /// Loguea a un usuario
         /// </summary>
-        /// <returns>Regresa un AuthResponse con el token de sesión, correo y tipo del usuario</returns>
+        /// <returns>Regresa un AuthResponse con el token de sesión, usuario y tipo de usuario</returns>
         /// /// <remarks>
         /// Sample request:
         ///
         ///     POST /login
         ///     {
-        ///        "correo": cd@gm.com,
+        ///        "usuario": S18120,
         ///        "clave": "juasjuas"
         ///     }
         ///
@@ -44,7 +44,7 @@ namespace SQL_Judge.Controllers
         [ProducesResponseType(typeof(UnauthorizedExample), StatusCodes.Status401Unauthorized)]
         public IActionResult Authenticate([FromBody] UserCred userCred)
         {
-            var authResponse = jWTAuthManager.Authenticate(userCred.Correo, userCred.Clave);
+            var authResponse = jWTAuthManager.Authenticate(userCred.Usuario, userCred.Clave);
             if (authResponse == null) return Unauthorized();
 
             var correo = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
@@ -53,7 +53,7 @@ namespace SQL_Judge.Controllers
             var response = new Dictionary<string, string>()
             {
                 { "token", authResponse.token },
-                { "correo", authResponse.correo },
+                { "usuario", authResponse.usuario },
                 { "tipo", authResponse.tipo }
             };
             return Ok(authResponse);
@@ -71,8 +71,8 @@ namespace SQL_Judge.Controllers
         [ProducesResponseType(typeof(ForbidenExample), StatusCodes.Status403Forbidden)]
         public IActionResult SaludaAlumno()
         {
-            var correo = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
-            return Ok("Hola " + correo + " eres un alumno");
+            var usuario = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
+            return Ok("Hola " + usuario + " eres un alumno");
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace SQL_Judge.Controllers
         [ProducesResponseType(typeof(ForbidenExample), StatusCodes.Status403Forbidden)]
         public IActionResult SaludaAdmin()
         {
-            var correo = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
-            return Ok("Hola " + correo + " eres un admin");
+            var usuario = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
+            return Ok("Hola " + usuario + " eres un admin");
         }
     }
 }
