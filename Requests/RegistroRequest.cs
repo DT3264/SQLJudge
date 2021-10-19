@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SQL_Judge.Auth
 {
-    public class RegistroCred
+    public class RegistroRequest
     {
         [DefaultValue("Miguel Alejandro")]
         public string nombre { get; set; }

@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SQL_Judge.Auth;
 using SQL_Judge.BD;
+using SQL_Judge.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using SQL_Judge.Auth;
 
 namespace SQL_Judge.Controllers
 {
@@ -17,6 +14,49 @@ namespace SQL_Judge.Controllers
     [ApiController]
     public class RegistroController : ControllerBase
     {
+        /// <summary>
+        /// Genera un nuevo código de registro
+        /// </summary>
+        /// <returns>Regresa un AuthResponse con el token de sesión, usuario y tipo de usuario</returns>
+        /// /// <remarks>
+        /// Ejemplo:
+        ///
+        ///     POST /api/login
+        ///     {
+        ///        "usuario": S18120,
+        ///        "clave": "juasjuas"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Regresa el usuario logueado con su token</response>
+        [HttpPost("generarCodigoRegistro")]
+        [Authorize(Policy = "Admins")]
+        [ProducesResponseType(typeof(NewCodigoRegistroResponse), StatusCodes.Status200OK)]
+        public IActionResult GenerarCodigo()
+        {
+            var dbContext = new SQLJudgeContext();
+
+            const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            var longitud = 10;
+            var randString = new string(Enumerable.Repeat(chars, longitud)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            var codigoRegistro = new Codigosregistro() 
+            {
+                Codigo = randString
+            };
+            dbContext.Add(codigoRegistro);
+            dbContext.SaveChanges();
+
+            var codigoResult = new Dictionary<string, string>()
+            {
+                {
+                    "codigo", codigoRegistro.Codigo
+                }
+            };
+            return Ok(codigoResult);
+        }
 
         /// <summary>
         /// Registra a un usuario
@@ -49,7 +89,7 @@ namespace SQL_Judge.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public ActionResult Post([FromBody] RegistroCred value)
+        public ActionResult Post([FromBody] RegistroRequest value)
         {
             Usuario usuario;
             using (SQLJudgeContext context = new SQLJudgeContext())
@@ -81,5 +121,4 @@ namespace SQL_Judge.Controllers
             }
         }
     }
-    
 }

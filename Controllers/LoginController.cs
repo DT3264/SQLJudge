@@ -27,9 +27,9 @@ namespace SQL_Judge.Controllers
         /// </summary>
         /// <returns>Regresa un AuthResponse con el token de sesión, usuario y tipo de usuario</returns>
         /// /// <remarks>
-        /// Sample request:
+        /// Ejemplo:
         ///
-        ///     POST /login
+        ///     POST /api/login
         ///     {
         ///        "usuario": S18120,
         ///        "clave": "juasjuas"
@@ -37,15 +37,15 @@ namespace SQL_Judge.Controllers
         ///
         /// </remarks>
         /// <response code="200">Regresa el usuario logueado con su token</response>
-        /// <response code="401">El ingreso fue incorrecto, credenciales inválidas</response>            
+        /// <response code="400">El ingreso fue incorrecto, credenciales inválidas</response>            
         [AllowAnonymous]
         [HttpPost]
-        [ProducesResponseType(typeof(AuthResponse),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(UnauthorizedExample), StatusCodes.Status401Unauthorized)]
-        public IActionResult Authenticate([FromBody] UserCred userCred)
+        [ProducesResponseType(typeof(LoginResponse),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UnauthorizedExampleResponse), StatusCodes.Status400BadRequest)]
+        public IActionResult Authenticate([FromBody] LoginRequest userCred)
         {
             var authResponse = jWTAuthManager.Authenticate(userCred.Usuario, userCred.Clave);
-            if (authResponse == null) return Unauthorized();
+            if (authResponse == null) return BadRequest("No existe");
 
             var correo = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
             var tipo = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();            
@@ -64,11 +64,9 @@ namespace SQL_Judge.Controllers
         /// </summary>
         /// <returns>Saludo para alumnos</returns>
         /// <response code="200">El  usuario tiene acceso de alumno</response>
-        /// <response code="403">El usuario no tiene acceso de alumno</response> 
         [HttpGet("holaAlumno")]
         [Authorize(Policy = "Alumnos")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ForbidenExample), StatusCodes.Status403Forbidden)]
         public IActionResult SaludaAlumno()
         {
             var usuario = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
@@ -80,11 +78,9 @@ namespace SQL_Judge.Controllers
         /// </summary>
         /// <returns>Saludo para admins</returns>
         /// <response code="200">El  usuario tiene acceso de administrador</response>
-        /// <response code="403">El usuario no tiene acceso de administrador</response>            
         [HttpGet("holaAdmin")]
         [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ForbidenExample), StatusCodes.Status403Forbidden)]
         public IActionResult SaludaAdmin()
         {
             var usuario = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();

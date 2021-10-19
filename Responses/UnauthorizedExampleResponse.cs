@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SQL_Judge
 {
-    public class ForbidenExample
+    public class UnauthorizedExampleResponse
     {
-        [DefaultValue("Forbiden")]
+        [DefaultValue("Unauthorized")]
         public string title { get; set; }
-        [DefaultValue(403)]
+        [DefaultValue(400)]
         public int status { get; set; }
     }
 }
