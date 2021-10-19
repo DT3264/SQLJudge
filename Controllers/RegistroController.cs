@@ -99,46 +99,11 @@ namespace SQL_Judge.Controllers
                 usuario = usuarioDB.FirstOrDefault(u => u.Usuario1 == value.usuario);
                 if (usuario == null)
                 {
-                    if (value.tipo == "Alumno")
+                    Codigosregistro grup;
+                    var codigo = context.Codigosregistros.ToList();
+                    grup = codigo.FirstOrDefault(u => u.Codigo == value.codigo);
+                    if (grup != null)
                     {
-                        Grupo grup;
-                        var codigo = context.Grupos.ToList();
-                        grup = codigo.FirstOrDefault(u => u.CodigoClase == value.codigo);
-                        if (grup != null)
-                        {
-                            context.Add(new Usuario()
-                            {
-                                Nombre = value.nombre,
-                                ApellidoP = value.apellidoP,
-                                ApellidoM = value.apellidoM,
-                                Correo = value.correo,
-                                Usuario1 = value.usuario,
-                                Clave = JWTAuthManager.getStringHash(value.clave).ToLower(),
-                                Pais = value.pais,
-                                Estado = value.estado,
-                                Escuela = value.escuela,
-                                Tipo = value.tipo
-                            });
-                            context.SaveChanges();
-                            usuarioDB = context.Usuarios.ToList();
-                            usuario = usuarioDB.FirstOrDefault(u => u.Usuario1 == value.usuario);
-                            using (SQLJudgeContext context2 = new SQLJudgeContext())
-                            {
-                                context2.Add(new Registrogrupo()
-                                {
-                                    IdGrupo = grup.IdGrupo,
-                                    IdUsuario = usuario.IdUsuario
-                                });
-                                context2.SaveChanges();
-                            }
-                            return Ok("Usuario registrado");
-                        }
-                        else
-                        {
-                            return BadRequest("El grupo no existe");
-                        }
-                    }
-                    else {
                         context.Add(new Usuario()
                         {
                             Nombre = value.nombre,
@@ -154,7 +119,11 @@ namespace SQL_Judge.Controllers
                         });
                         context.SaveChanges();
                         return Ok("Usuario registrado");
-                    }   
+                    }
+                    else
+                    {
+                        return BadRequest("El grupo no existe");
+                    }
                 }
                 else
                 {
