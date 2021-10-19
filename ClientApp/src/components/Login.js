@@ -1,6 +1,8 @@
 import React from "react";
 import Validaciones from "./Validaciones";
 import "./General.css";
+import axios from 'axios';
+import { withRouter } from "react-router";
 
 class Login extends React.Component {
 
@@ -8,10 +10,11 @@ class Login extends React.Component {
         usuario : '',
         mensajeUsuario : '',
         clave : '',
-        mensajeClave : ''
+        mensajeClave : '',
+        mensajeNoExisteUsuario : ''
     }
 
-    handleInputChange(event) {
+    handleInputChange = (event) => {
         const target = event.target;
         const value = target.value;
         const name = target.name;
@@ -21,7 +24,7 @@ class Login extends React.Component {
         });
     }
 
-    logUser = () => {
+    logUser = async () => {
         var esPosible = true;
         var validaciones = new Validaciones();
 
@@ -41,13 +44,46 @@ class Login extends React.Component {
         if(!testClave[0]){
             esPosible = false;
         }
+        console.log(testClave);
+        try {
+            const respuesta = await axios.post( "/api/login",{
+                usuario: this.state.usuario,
+                clave: this.state.clave
+            });
+            console.log("hola");
+            console.log(respuesta);
 
-        if(esPosible){
+            var valueUsuario = respuesta.data.usuario;
+            var valueToken = respuesta.data.token;
+            var valueTipo = respuesta.data.tipo;
+
+            sessionStorage.setItem('usuario', valueUsuario);
+
+            sessionStorage.setItem('token', valueToken);
+
+            sessionStorage.setItem('tipoUsuario', valueTipo);
+
+            this.props.history.push("/");
+            this.setState({mensajeNoExisteUsuario: ""});
+          } catch (error) {
+            if(testClave[0] && testNombreUsuario[0]){
+                this.setState({mensajeNoExisteUsuario: "Usuario y/0 contrasenia invalido"});
+            }
+            else{
+                this.setState({mensajeNoExisteUsuario: ""});
+            }
+          }
+
+        
+        
+
+
+        /*if(esPosible){
             alert("logeado con exito");
         }
         else{
             alert("algo no esta bien");
-        }
+        }*/
     }
 
     render(){
@@ -73,6 +109,7 @@ class Login extends React.Component {
                         value= {this.state.clave}
                     />
                     <p className = "error-validacion">{this.state.mensajeClave}</p>
+                    <p className = "error-validacion"> {this.state.mensajeNoExisteUsuario}</p>
                     
                     <button className="btn btn-success" onClick ={this.logUser}  style={{marginTop: "10px"}}>Ingresar</button>
                 </div>
@@ -82,4 +119,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default withRouter(Login);
