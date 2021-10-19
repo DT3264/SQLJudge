@@ -40,9 +40,9 @@ namespace SQL_Judge.Controllers
         /// <response code="400">El ingreso fue incorrecto, credenciales inválidas</response>            
         [AllowAnonymous]
         [HttpPost]
-        [ProducesResponseType(typeof(AuthResponse),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(UnauthorizedExample), StatusCodes.Status400BadRequest)]
-        public IActionResult Authenticate([FromBody] UserCred userCred)
+        [ProducesResponseType(typeof(LoginResponse),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UnauthorizedExampleResponse), StatusCodes.Status400BadRequest)]
+        public IActionResult Authenticate([FromBody] LoginRequest userCred)
         {
             var authResponse = jWTAuthManager.Authenticate(userCred.Usuario, userCred.Clave);
             if (authResponse == null) return BadRequest("No existe");

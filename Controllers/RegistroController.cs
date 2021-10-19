@@ -89,7 +89,7 @@ namespace SQL_Judge.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public ActionResult Post([FromBody] RegistroCred value)
+        public ActionResult Post([FromBody] RegistroRequest value)
         {
             Usuario usuario;
             using (SQLJudgeContext context = new SQLJudgeContext())

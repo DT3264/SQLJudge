@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SQL_Judge
 {
-    public class AuthResponse
+    public class LoginResponse
     {
         public string usuario { get; set; }
         public string tipo { get; set; }

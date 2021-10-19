@@ -39,7 +39,7 @@ namespace SQL_Judge
         }
 
 
-        public AuthResponse Authenticate(string username, string password)
+        public LoginResponse Authenticate(string username, string password)
         {
             Usuario usuario;
             using (SQLJudgeContext context = new SQLJudgeContext())
@@ -65,7 +65,7 @@ namespace SQL_Judge
                     SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return new AuthResponse() { 
+            return new LoginResponse() { 
                 usuario = usuario.Usuario1,
                 tipo = usuario.Tipo,
                 token = tokenHandler.WriteToken(token)

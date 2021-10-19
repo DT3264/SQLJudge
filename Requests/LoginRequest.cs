@@ -2,7 +2,7 @@
 
 namespace SQL_Judge.Controllers
 {
-    public class UserCred
+    public class LoginRequest
     {
         [DefaultValue("S18120")]
         public string Usuario { get; set; }
