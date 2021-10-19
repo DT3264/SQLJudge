@@ -80,11 +80,12 @@ namespace SQL_Judge.Controllers
         ///          "estado": "Guanajuato",
         ///          "escuela": "ITSUR",
         ///          "tipo": "Alumno"
+        ///          "codigo": "asf899ad2"
         ///     }
         ///
         /// </remarks>
         /// <response code="200">Regresa el mensaje de usuario registrado</response>
-        /// <response code="400">Regresa el mensaje de usuario existente</response>
+        /// <response code="400">Regresa el mensaje de usuario existente o grupo no existente</response>
         [AllowAnonymous]
         [HttpPost]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -98,21 +99,62 @@ namespace SQL_Judge.Controllers
                 usuario = usuarioDB.FirstOrDefault(u => u.Usuario1 == value.usuario);
                 if (usuario == null)
                 {
-                    context.Add(new Usuario()
+                    if (value.tipo == "Alumno")
                     {
-                        Nombre = value.nombre,
-                        ApellidoP = value.apellidoP,
-                        ApellidoM = value.apellidoM,
-                        Correo = value.correo,
-                        Usuario1 = value.usuario,
-                        Clave = JWTAuthManager.getStringHash(value.clave).ToLower(),
-                        Pais = value.pais,
-                        Estado = value.estado,
-                        Escuela = value.escuela,
-                        Tipo = value.tipo
-                    });
-                    context.SaveChanges();
-                    return Ok("Usuario registrado");
+                        Grupo grup;
+                        var codigo = context.Grupos.ToList();
+                        grup = codigo.FirstOrDefault(u => u.CodigoClase == value.codigo);
+                        if (grup != null)
+                        {
+                            context.Add(new Usuario()
+                            {
+                                Nombre = value.nombre,
+                                ApellidoP = value.apellidoP,
+                                ApellidoM = value.apellidoM,
+                                Correo = value.correo,
+                                Usuario1 = value.usuario,
+                                Clave = JWTAuthManager.getStringHash(value.clave).ToLower(),
+                                Pais = value.pais,
+                                Estado = value.estado,
+                                Escuela = value.escuela,
+                                Tipo = value.tipo
+                            });
+                            context.SaveChanges();
+                            usuarioDB = context.Usuarios.ToList();
+                            usuario = usuarioDB.FirstOrDefault(u => u.Usuario1 == value.usuario);
+                            using (SQLJudgeContext context2 = new SQLJudgeContext())
+                            {
+                                context2.Add(new Registrogrupo()
+                                {
+                                    IdGrupo = grup.IdGrupo,
+                                    IdUsuario = usuario.IdUsuario
+                                });
+                                context2.SaveChanges();
+                            }
+                            return Ok("Usuario registrado");
+                        }
+                        else
+                        {
+                            return BadRequest("El grupo no existe");
+                        }
+                    }
+                    else {
+                        context.Add(new Usuario()
+                        {
+                            Nombre = value.nombre,
+                            ApellidoP = value.apellidoP,
+                            ApellidoM = value.apellidoM,
+                            Correo = value.correo,
+                            Usuario1 = value.usuario,
+                            Clave = JWTAuthManager.getStringHash(value.clave).ToLower(),
+                            Pais = value.pais,
+                            Estado = value.estado,
+                            Escuela = value.escuela,
+                            Tipo = value.tipo
+                        });
+                        context.SaveChanges();
+                        return Ok("Usuario registrado");
+                    }   
                 }
                 else
                 {
