@@ -17,18 +17,7 @@ namespace SQL_Judge.Controllers
         /// <summary>
         /// Genera un nuevo código de registro
         /// </summary>
-        /// <returns>Regresa un AuthResponse con el token de sesión, usuario y tipo de usuario</returns>
-        /// /// <remarks>
-        /// Ejemplo:
-        ///
-        ///     POST /api/login
-        ///     {
-        ///        "usuario": S18120,
-        ///        "clave": "juasjuas"
-        ///     }
-        ///
-        /// </remarks>
-        /// <response code="200">Regresa el usuario logueado con su token</response>
+        /// <response code="200">Regresa el código generado</response>
         [HttpPost("generarCodigoRegistro")]
         [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(NewCodigoRegistroResponse), StatusCodes.Status200OK)]
@@ -56,6 +45,59 @@ namespace SQL_Judge.Controllers
                 }
             };
             return Ok(codigoResult);
+        }
+
+        /// <summary>
+        /// Obtiene los códigos de registro existentes
+        /// </summary>
+        /// <remarks>
+        /// Respuesta de ejemplo:
+        /// [
+        ///  {
+        ///    "idCodigoRegistro": 6,
+        ///    "codigo": "xd7oi93b2k"
+        ///  },
+        ///  {
+        ///    "idCodigoRegistro": 7,
+        ///    "codigo": "s1aqg0vt32"
+        ///  },
+        /// ]
+        /// </remarks>
+        /// <response code="200">Regresa los códigos de registro existentes</response>
+        [HttpPost("obtenerCodigosRegistro")]
+        [Authorize(Policy = "Admins")]
+        [ProducesResponseType(typeof(Codigosregistro), StatusCodes.Status200OK)]
+        public IActionResult ObtenerCodigos()
+        {
+            var dbContext = new SQLJudgeContext();
+            var codigos = dbContext.Codigosregistros;
+            return Ok(codigos);
+        }
+
+        /// <summary>
+        /// Elimina un código por ID
+        /// </summary>
+        /// <response code="200">El código se eliminó correctamente</response>
+        /// <response code="400">El código a eliminar no existe</response>
+        [HttpPost("eliminarCodigoPorID")]
+        [Authorize(Policy = "Admins")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public IActionResult EliminarCodigoPorID([FromBody] EliminarCodigoRequest id)
+        {
+            var dbContext = new SQLJudgeContext();
+            try {
+                var codigoAEliminar = (from c in dbContext.Codigosregistros
+                                       where c.IdCodigoRegistro == id.id
+                                       select c).Single();
+                dbContext.Remove(codigoAEliminar);
+                dbContext.SaveChanges();
+                return Ok("Codigo eliminado correctamente");
+            }
+            catch 
+            {
+                return BadRequest("No existe código con ese ID");
+            }
         }
 
         /// <summary>
