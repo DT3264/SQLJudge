@@ -29,5 +29,8 @@ namespace SQL_Judge.Auth
         public string escuela { get; set; }
         [DefaultValue("Alumno")]
         public string tipo { get; set; }
+        [DefaultValue("asf899ad2")]
+        public string codigo { get; set; }
+
     }
 }
