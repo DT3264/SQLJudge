@@ -22,11 +22,9 @@
 
 }
 .table thead th{
-    padding: 0.3rem 0.75rem 0.3rem 7rem ;
+    padding: 0.3rem 0.70rem 0.3rem 7rem ;
     text-align:left;
 }
-
-
 .table td{
     padding: 0.3rem 0.75rem ;
     text-align: center;

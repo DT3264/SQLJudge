@@ -1,5 +1,6 @@
 import React from "react";
 import './GenerarCodigoRegistro.css';
+import axios from 'axios';
 
 class GenerarCodigoRegistro extends React.Component {
     state={links:[], link:""};
@@ -16,10 +17,12 @@ class GenerarCodigoRegistro extends React.Component {
     };
     
     render(){
+        
+
         const mostrarLinks=this.state.links.map((link) => {
             return(
             <tr>
-                <td class="grande">Nuevo codigo</td>
+                <td class="grande">{this.generarCodigo}</td>
                 <td><button class="btn btnR btn-danger ">Eliminar</button></td>
             </tr>
             )
@@ -47,7 +50,6 @@ class GenerarCodigoRegistro extends React.Component {
                     
                
                 </div>
-                
 
             </div>
         );
@@ -57,7 +59,18 @@ class GenerarCodigoRegistro extends React.Component {
     }
 
  
+    generarCodigo = async()=>{
+        const token=sessionStorage.getItem("token");
+        const tmp_token="Bearer "+ token;
+        const headers={
+            "Content-Type": "application/json",
+            Authorization: tmp_token,
+        }
+        const respuesta= await axios.post("/api/Registro/generarCodigoRegistro", {
 
+        });
+        console.log(respuesta.data);
+    }
 
  }
 
