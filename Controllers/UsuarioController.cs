@@ -98,7 +98,7 @@ namespace SQL_Judge.Controllers
         /// <summary>
         /// Modifica un usuario con los nuevos parámetros identificado por su id
         /// </summary>
-        /// <param name="value">Usuario ha modificar</param>
+        /// <param name="value">Datos a modificar del usuario</param>
         /// <returns></returns>
         /// /// <remarks>
         /// Ejemplo:
@@ -152,6 +152,45 @@ namespace SQL_Judge.Controllers
                     return BadRequest("No existe el usuario");
                 }
             }
+        }
+        /// <summary>
+        /// Obtiene los datos del usuario
+        /// </summary>
+        /// <param name="value">Id del usuario</param>
+        /// <returns>
+        /// Datos del usuario
+        /// </returns>
+        /// /// <remarks>
+        /// Ejemplo:
+        ///
+        ///     POST Usuario/datosUsuario
+        ///     {
+        ///        "id": 1
+        ///     }
+        /// </remarks>
+        /// <response code="200">Datos del usuario</response>
+        /// <response code="400">El usuario no existe</response>
+        [HttpPost("datosUsuario")]
+        [Authorize(Policy = "Admins")]
+        [ProducesResponseType(typeof(UsuarioRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public IActionResult datosUsuario([FromBody] EliminarCodigoRequest value)
+        {
+            Usuario usuario;
+            using (SQLJudgeContext context = new SQLJudgeContext())
+            {
+                usuario = context.Usuarios.ToList().FirstOrDefault(u => u.IdUsuario == value.id);
+                if (usuario != null)
+                {
+                    UsuarioRequest us = new UsuarioRequest(usuario);
+                    return Ok(us);
+                }
+                else { 
+                    return BadRequest("No existe el usuario");
+                }
+                
+            }
+            
         }
     }
 }
