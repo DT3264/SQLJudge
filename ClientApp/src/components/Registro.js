@@ -3,17 +3,21 @@ import { withRouter } from "react-router";
 import "./General.css";
 import "./Validaciones.js";
 import Validaciones from "./Validaciones.js";
+import axios from "axios";
 
 class Registro extends React.Component {
     estadoTest = {
         nombreUsuario: "",
         nombre: "",
+        apellidoPaterno: "",
+        apellidoMaterno: "",
         correo: "",
         pais: "",
         estado: "",
         escuela: "",
         password: "",
         verifyPassword: "",
+        codigoRegistro: "",
     };
 
     state = {
@@ -37,7 +41,33 @@ class Registro extends React.Component {
         });
     };
 
-    RegisterUser = () => {
+    RequestRegisterUser = async () => {
+        try {
+            await axios.post("/api/Registro", {
+                nombre: this.state.formulario.nombre,
+                apellidoP: this.state.formulario.apellidoPaterno,
+                apellidoM: this.state.formulario.apellidoMaterno,
+                correo: this.state.formulario.correo,
+                usuario: this.state.formulario.nombreUsuario,
+                clave: this.state.formulario.password,
+                pais: this.state.formulario.pais,
+                estado: this.state.formulario.estado,
+                escuela: this.state.formulario.escuela,
+                tipo: "Alumno",
+                codigo: this.state.formulario.codigoRegistro,
+            });
+            this.props.history.push("/login");
+        } catch (error) {
+            this.setState({
+                formularioErrores: {
+                    ...this.state.formularioErrores,
+                    nombreUsuario: "El este nombre de usuario ya existe",
+                },
+            });
+        }
+    };
+
+    RegisterUser = async () => {
         var esPosible = true;
         var validaciones = new Validaciones();
 
@@ -64,6 +94,15 @@ class Registro extends React.Component {
             this.state.formulario.password,
             this.state.formulario.verifyPassword
         );
+        var testApellidoPaterno = validaciones.validarApellido(
+            this.state.formulario.apellidoPaterno
+        );
+        var testApellidoMaterno = validaciones.validarApellido(
+            this.state.formulario.apellidoPaterno
+        );
+        var testCodigoVerificacion = validaciones.validarCodigoRegistro(
+            this.state.formulario.codigoRegistro
+        );
 
         if (!testCorreo[0]) esPosible = false;
         if (!testNombre[0]) esPosible = false;
@@ -72,6 +111,8 @@ class Registro extends React.Component {
         if (!testEstado[0]) esPosible = false;
         if (!testEscuela[0]) esPosible = false;
         if (!testVerify[0]) esPosible = false;
+        if (!testApellidoPaterno[0]) esPosible = false;
+        if (!testApellidoMaterno[0]) esPosible = false;
 
         this.setState({
             formularioErrores: {
@@ -84,13 +125,15 @@ class Registro extends React.Component {
                 escuela: testEscuela[1],
                 password: testPassword[1],
                 verifyPassword: testVerify[1],
+                apellidoPaterno: testApellidoPaterno[1],
+                apellidoMaterno: testApellidoMaterno[1],
+                codigoRegistro: testCodigoVerificacion[1],
             },
         });
 
-        // connect to the backend
-        console.log(esPosible);
-        sessionStorage.removeItem("tipoUsuario");
-        this.props.history.push("/login");
+        if (esPosible) {
+            this.RequestRegisterUser();
+        }
     };
 
     render() {
@@ -110,7 +153,7 @@ class Registro extends React.Component {
                         </p>
                     </div>
                     <div className="form-group">
-                        <label>Nombre:</label>
+                        <label>Nombre(s):</label>
                         <input
                             name="nombre"
                             onChange={this.handleInputChange}
@@ -119,6 +162,30 @@ class Registro extends React.Component {
                         />
                         <p className="error-validacion">
                             {this.state.formularioErrores.nombre}
+                        </p>
+                    </div>
+                    <div className="form-group">
+                        <label>Apellido Paterno:</label>
+                        <input
+                            name="apellidoPaterno"
+                            onChange={this.handleInputChange}
+                            value={this.state.formulario.apellidoPaterno}
+                            className="form-control"
+                        />
+                        <p className="error-validacion">
+                            {this.state.formularioErrores.apellidoPaterno}
+                        </p>
+                    </div>
+                    <div className="form-group">
+                        <label>Apellido Materno:</label>
+                        <input
+                            name="apellidoMaterno"
+                            onChange={this.handleInputChange}
+                            value={this.state.formulario.apellidoMaterno}
+                            className="form-control"
+                        />
+                        <p className="error-validacion">
+                            {this.state.formularioErrores.apellidoMaterno}
                         </p>
                     </div>
                     <div className="form-group">
@@ -167,6 +234,18 @@ class Registro extends React.Component {
                         />
                         <p className="error-validacion">
                             {this.state.formularioErrores.escuela}
+                        </p>
+                    </div>
+                    <div className="form-group">
+                        <label>Codigo de registro:</label>
+                        <input
+                            name="codigoRegistro"
+                            onChange={this.handleInputChange}
+                            value={this.state.formulario.codigoRegistro}
+                            className="form-control"
+                        />
+                        <p className="error-validacion">
+                            {this.state.formularioErrores.codigoRegistro}
                         </p>
                     </div>
                     <div className="form-group">
