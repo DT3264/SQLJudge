@@ -1,0 +1,44 @@
+.tabla{
+    padding-top: 4rem;
+    margin-left: 30%;
+}
+
+.list-group{
+    text-align: center;
+}
+
+.list-group-item{
+    width: 20rem;
+    padding: 0;
+}
+.btn{
+    height:1.5rem;
+    font-size: .8rem;
+    vertical-align:auto;
+    padding:0 1rem 0.37rem 1rem;
+    
+    margin:0;
+    margin-bottom: .1rem;
+
+}
+.table thead th{
+    padding: 0.3rem 0.75rem 0.3rem 8rem ;
+    text-align:left;
+}
+
+
+.table td{
+    padding: 0.3rem 0.75rem ;
+    text-align: center;
+}
+.table{
+    width: 30rem;
+}
+.grande{
+    width:90%;
+}
+
+.agregar{
+    margin-bottom: 8rem;
+    margin-left: 18%;
+}
