@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`Problemas` (
   CONSTRAINT `fk_Problemas_Categorias1`
     FOREIGN KEY (`categoria`)
     REFERENCES `SQLJudge`.`Categorias` (`idCategoria`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -82,13 +82,13 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`Envios` (
   CONSTRAINT `fk_Usuarios_has_Problemas_Usuarios`
     FOREIGN KEY (`idUsuario`)
     REFERENCES `SQLJudge`.`Usuarios` (`idUsuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Usuarios_has_Problemas_Problemas1`
     FOREIGN KEY (`idProblema`)
     REFERENCES `SQLJudge`.`Problemas` (`idProblema`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -105,8 +105,8 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`Grupos` (
   CONSTRAINT `fk_Grupo_Usuarios1`
     FOREIGN KEY (`docente`)
     REFERENCES `SQLJudge`.`Usuarios` (`idUsuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -122,13 +122,13 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`RegistroGrupo` (
   CONSTRAINT `fk_Usuarios_has_Grupo_Usuarios1`
     FOREIGN KEY (`idUsuario`)
     REFERENCES `SQLJudge`.`Usuarios` (`idUsuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Usuarios_has_Grupo_Grupo1`
     FOREIGN KEY (`idGrupo`)
     REFERENCES `SQLJudge`.`Grupos` (`idGrupo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -145,8 +145,8 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`Tareas` (
   CONSTRAINT `fk_Tareas_Grupos1`
     FOREIGN KEY (`idGrupo`)
     REFERENCES `SQLJudge`.`Grupos` (`idGrupo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -162,13 +162,13 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`ProblemasTareas` (
   CONSTRAINT `fk_Tareas_has_Problemas_Tareas1`
     FOREIGN KEY (`idTarea`)
     REFERENCES `SQLJudge`.`Tareas` (`idTarea`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Tareas_has_Problemas_Problemas1`
     FOREIGN KEY (`idProblema`)
     REFERENCES `SQLJudge`.`Problemas` (`idProblema`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
