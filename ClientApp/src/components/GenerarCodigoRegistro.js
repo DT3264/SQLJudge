@@ -41,9 +41,7 @@ class GenerarCodigoRegistro extends React.Component {
                         </tr>   
                     </thead>
                     <tbody>
-                       
                         {mostrarLinks}
-                    
                     </tbody>
                     </table>
                     <button type="button"  onClick={this.agregarLink} class="btn btnR btn-success agregar">Agregar codigo</button>
