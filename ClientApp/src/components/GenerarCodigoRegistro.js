@@ -1,5 +1,5 @@
 import React from "react";
-import './GenerarCodigosRegistro.css';
+import './GenerarCodigoRegistro.css';
 
 class GenerarCodigoRegistro extends React.Component {
     state={links:[], link:""};
@@ -51,25 +51,25 @@ class GenerarCodigoRegistro extends React.Component {
                     <tbody>
                         <tr >
                             <td class="grande">dhsjakjshdgsjfdsadfghgfdsdfghakl</td>
-                            <td> <button type="button" class="btn btn-danger ">Eliminar link</button></td>
+                            <td> <button type="button" class="btnR btn-danger ">Eliminar link</button></td>
                         </tr>
                         <tr>
                             <td class="grande">ewqisjhjxsakjsnxsa</td>
-                            <td> <button type="button" class="btn btn-danger ">Eliminar link</button></td>
+                            <td> <button type="button" class="btnR btn-danger ">Eliminar link</button></td>
                         </tr>
                         <tr>
                             <td class="grande">dwshqisjxbiswkwc</td>
-                            <td> <button type="button" class="btn btn-danger ">Eliminar link</button></td>
+                            <td> <button type="button" class="btnR btn-danger ">Eliminar link</button></td>
                         </tr>
                         <tr>
                             <td class="grande">efgfdsasdefrgfd</td>
-                            <td> <button type="button" class="btn btn-danger ">Eliminar link</button></td>
+                            <td> <button type="button" class="btnR btn-danger ">Eliminar link</button></td>
                         </tr>
                     
                     
                     </tbody>
                     </table>
-                    <button type="button"  onClick={this.agregarLink} class="btn btn-success agregar">Agregar link</button>
+                    <button type="button"  onClick={this.agregarLink} class="btnR btn-success agregar">Agregar link</button>
                     {mostrarLinks}
                
                 </div>
