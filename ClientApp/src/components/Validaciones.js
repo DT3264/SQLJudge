@@ -16,7 +16,6 @@ class Validaciones {
         if (nombre.length >= 45) {
             return [false, "el nombre solo puede tener hasta 45 letras"];
         }
-        console.log("que?");
         return [true, ""];
     }
 
@@ -27,7 +26,26 @@ class Validaciones {
         if (nombre.length >= 45) {
             return [false, "el usuario solo puede tener hasta 45 letras"];
         }
-        console.log("que?");
+        return [true, ""];
+    }
+
+    validarApellido(apellido) {
+        if (apellido.length === 0) {
+            return [false, "apellido no puede estar vacio"];
+        }
+        if (apellido.length >= 45) {
+            return [false, "el apellido solo puede tener hasta 45 letras"];
+        }
+        return [true, ""];
+    }
+
+    validarNombreUsuario(nombre) {
+        if (nombre.length === 0) {
+            return [false, "usuario no puede estar vacio"];
+        }
+        if (nombre.length >= 45) {
+            return [false, "el usuario solo puede tener hasta 45 letras"];
+        }
         return [true, ""];
     }
 
@@ -38,7 +56,6 @@ class Validaciones {
         if (pais.length >= 45) {
             return [false, "el pais solo puede tener hasta 45 letras"];
         }
-        console.log("que?");
         return [true, ""];
     }
 
@@ -49,7 +66,6 @@ class Validaciones {
         if (estado.length >= 45) {
             return [false, "el estado solo puede tener hasta 45 letras"];
         }
-        console.log("que?");
         return [true, ""];
     }
 
@@ -60,7 +76,6 @@ class Validaciones {
         if (escuela.length >= 45) {
             return [false, "la escuela solo puede tener hasta 45 letras"];
         }
-        console.log("que?");
         return [true, ""];
     }
 
@@ -71,7 +86,6 @@ class Validaciones {
         if (password.length >= 45) {
             return [false, "la password solo puede tener hasta 150 caracteres"];
         }
-        console.log("que?");
         return [true, ""];
     }
 
@@ -81,6 +95,13 @@ class Validaciones {
         } else {
             return [false, "las contraseñas no coinciden"];
         }
+    }
+
+    validarCodigoRegistro(codigo){
+        if(codigo.length !== 10){
+            return [false,"el codigo debe tener 10 caracteres"];
+        }
+        return [true,""];
     }
 }
 
