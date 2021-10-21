@@ -1,5 +1,5 @@
 import React from "react";
-import './GenerarCodigosRegistro.css';
+import './GenerarCodigoRegistro.css';
 
 class GenerarCodigoRegistro extends React.Component {
     state={links:[], link:""};
@@ -17,24 +17,13 @@ class GenerarCodigoRegistro extends React.Component {
     
     render(){
         const mostrarLinks=this.state.links.map((link) => {
-            let fila = document.createElement("tr");
-    
-            let tdFila = document.createElement("td");
-            let nombre= document.createTextNode(link.link);
-            tdFila.appendChild(nombre);
-    
-            let tdBoton=document.createElement("td");
-            let boton= document.createElement("button");
-            boton.innerText="Eliminar";
-            boton.setAttribute("class","btn btn-danger ");
-           
-            tdBoton.append(boton);
-    
-            fila.append(tdFila);
-            fila.append(tdBoton);
-    
-            var tbody=document.querySelector("#tablaLinks tbody");
-            tbody.append(fila);
+            return(
+            <tr>
+                <td class="grande">Nuevo codigo</td>
+                <td><button class="btn btnR btn-danger ">Eliminar</button></td>
+            </tr>
+            )
+
         });
      
         return (
@@ -45,32 +34,17 @@ class GenerarCodigoRegistro extends React.Component {
                     
                     <thead>
                         <tr>
-                        <th scope="col" colSpan="2">Links disponibles</th>
+                        <th scope="col" colSpan="2">Codigos disponibles</th>
                         </tr>   
                     </thead>
                     <tbody>
-                        <tr >
-                            <td class="grande">dhsjakjshdgsjfdsadfghgfdsdfghakl</td>
-                            <td> <button type="button" class="btn btn-danger ">Eliminar link</button></td>
-                        </tr>
-                        <tr>
-                            <td class="grande">ewqisjhjxsakjsnxsa</td>
-                            <td> <button type="button" class="btn btn-danger ">Eliminar link</button></td>
-                        </tr>
-                        <tr>
-                            <td class="grande">dwshqisjxbiswkwc</td>
-                            <td> <button type="button" class="btn btn-danger ">Eliminar link</button></td>
-                        </tr>
-                        <tr>
-                            <td class="grande">efgfdsasdefrgfd</td>
-                            <td> <button type="button" class="btn btn-danger ">Eliminar link</button></td>
-                        </tr>
-                    
+                       
+                        {mostrarLinks}
                     
                     </tbody>
                     </table>
-                    <button type="button"  onClick={this.agregarLink} class="btn btn-success agregar">Agregar link</button>
-                    {mostrarLinks}
+                    <button type="button"  onClick={this.agregarLink} class="btn btnR btn-success agregar">Agregar codigo</button>
+                    
                
                 </div>
                 

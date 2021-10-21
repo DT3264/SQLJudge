@@ -11,7 +11,7 @@
     width: 20rem;
     padding: 0;
 }
-.btn{
+.btnR{
     height:1.5rem;
     font-size: .8rem;
     vertical-align:auto;
@@ -22,7 +22,7 @@
 
 }
 .table thead th{
-    padding: 0.3rem 0.75rem 0.3rem 8rem ;
+    padding: 0.3rem 0.75rem 0.3rem 7rem ;
     text-align:left;
 }
 
@@ -40,5 +40,5 @@
 
 .agregar{
     margin-bottom: 8rem;
-    margin-left: 18%;
+    margin-left: 17%;
 }
