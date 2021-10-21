@@ -2,9 +2,22 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import "./NavMenu.css";
+import Registro from "./Registro";
 
 class NavMenu extends Component {
     static displayName = NavMenu.name;
+
+    state = {
+        modalRegistro: false,
+    };
+
+    abrirModal = () => {
+        this.setState({ modalRegistro: true });
+    };
+
+    cerrarModal = () => {
+        this.setState({ modalRegistro: false });
+    };
 
     logOut = () => {
         sessionStorage.removeItem("usuario");
@@ -28,13 +41,9 @@ class NavMenu extends Component {
                     <Link className="btn btn-light" type="submit" to="/login">
                         Iniciar Sesion
                     </Link>
-                    <Link
-                        className="btn btn-light"
-                        type="submit"
-                        to="/registro"
-                    >
+                    <button className="btn btn-light" onClick={this.abrirModal}>
                         Registrarse
-                    </Link>
+                    </button>
                 </div>
             );
         }
@@ -168,10 +177,20 @@ class NavMenu extends Component {
                             id="navbarTogglerDemo03"
                         >
                             {listOfLinks}
-                            <form className="d-flex">{loginSection}</form>
+                            <form
+                                onSubmit={(e) => e.preventDefault()}
+                                className="d-flex"
+                            >
+                                {loginSection}
+                            </form>
                         </div>
                     </div>
                 </nav>
+                <Registro
+                    abrirModal={this.abrirModal}
+                    cerrarModal={this.cerrarModal}
+                    modalShow={this.state.modalRegistro}
+                />
             </div>
         );
     }
