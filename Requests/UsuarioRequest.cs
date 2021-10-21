@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQL_Judge.BD;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,6 +9,22 @@ namespace SQL_Judge.Requests
 {
     public class UsuarioRequest
     {
+        public UsuarioRequest(Usuario usuario)
+        {
+            this.id = usuario.IdUsuario;
+            this.nombre = usuario.Nombre;
+            this.apellidoP = usuario.ApellidoP;
+            this.apellidoM = usuario.ApellidoM;
+            this.correo = usuario.Correo;
+            this.usuario = usuario.Usuario1;
+            this.clave = usuario.Clave;
+            this.pais = usuario.Pais;
+            this.estado = usuario.Estado;
+            this.escuela = usuario.Escuela;
+            this.tipo = usuario.Tipo;
+            
+        }
+
         [DefaultValue(1)]
         public int id { get; set; }
         [DefaultValue("Miguel Alejandro")]
