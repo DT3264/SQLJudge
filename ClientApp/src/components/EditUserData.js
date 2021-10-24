@@ -4,6 +4,7 @@ import Validaciones from "./Validaciones.js";
 
 class EditUserData extends React.Component {
     estadoTest = {
+        id: "",
         nombreUsuario: "",
         nombre: "",
         apellidoPaterno: "",
@@ -18,7 +19,8 @@ class EditUserData extends React.Component {
     };
 
     estadoTest2 = {
-        nombreUsuario: true,
+        id: false,
+        nombreUsuario: false,
         nombre: false,
         apellidoPaterno: false,
         apellidoMaterno: false,
@@ -130,6 +132,7 @@ class EditUserData extends React.Component {
 
         if (esPosible) {
             var intenta = await this.props.pressedButton({
+                id: this.state.formulario.id,
                 nombre: this.state.formulario.nombre,
                 apellidoPaterno: this.state.formulario.apellidoPaterno,
                 apellidoMaterno: this.state.formulario.apellidoMaterno,
@@ -189,6 +192,7 @@ class EditUserData extends React.Component {
                                     onChange={this.handleInputChange}
                                     value={this.state.formulario.nombre}
                                     className="form-control"
+                                    disabled={this.state.formularioInput.nombre}
                                 />
                                 <p className="error-validacion">
                                     {this.state.formularioErrores.nombre}
@@ -203,6 +207,10 @@ class EditUserData extends React.Component {
                                         this.state.formulario.apellidoPaterno
                                     }
                                     className="form-control"
+                                    disabled={
+                                        this.state.formularioInput
+                                            .apellidoPaterno
+                                    }
                                 />
                                 <p className="error-validacion">
                                     {
@@ -220,6 +228,10 @@ class EditUserData extends React.Component {
                                         this.state.formulario.apellidoMaterno
                                     }
                                     className="form-control"
+                                    disabled={
+                                        this.state.formularioInput
+                                            .apellidoMaterno
+                                    }
                                 />
                                 <p className="error-validacion">
                                     {
@@ -235,6 +247,7 @@ class EditUserData extends React.Component {
                                     onChange={this.handleInputChange}
                                     value={this.state.formulario.correo}
                                     className="form-control"
+                                    disabled={this.state.formularioInput.correo}
                                 />
                                 <p className="error-validacion">
                                     {this.state.formularioErrores.correo}
@@ -245,8 +258,9 @@ class EditUserData extends React.Component {
                                 <input
                                     name="pais"
                                     onChange={this.handleInputChange}
-                                    value={this.state.pais}
+                                    value={this.state.formulario.pais}
                                     className="form-control"
+                                    disabled={this.state.formularioInput.pais}
                                 />
                                 <p className="error-validacion">
                                     {this.state.formularioErrores.pais}
@@ -257,8 +271,9 @@ class EditUserData extends React.Component {
                                 <input
                                     name="estado"
                                     onChange={this.handleInputChange}
-                                    value={this.state.estado}
+                                    value={this.state.formulario.estado}
                                     className="form-control"
+                                    disabled={this.state.formularioInput.estado}
                                 />
                                 <p className="error-validacion">
                                     {this.state.formularioErrores.estado}
@@ -269,8 +284,11 @@ class EditUserData extends React.Component {
                                 <input
                                     name="escuela"
                                     onChange={this.handleInputChange}
-                                    value={this.state.escuela}
+                                    value={this.state.formulario.escuela}
                                     className="form-control"
+                                    disabled={
+                                        this.state.formularioInput.escuela
+                                    }
                                 />
                                 <p className="error-validacion">
                                     {this.state.formularioErrores.escuela}
@@ -283,6 +301,10 @@ class EditUserData extends React.Component {
                                     onChange={this.handleInputChange}
                                     value={this.state.formulario.codigoRegistro}
                                     className="form-control"
+                                    disabled={
+                                        this.state.formularioInput
+                                            .codigoRegistro
+                                    }
                                 />
                                 <p className="error-validacion">
                                     {
@@ -297,8 +319,11 @@ class EditUserData extends React.Component {
                                     name="password"
                                     type="password"
                                     onChange={this.handleInputChange}
-                                    value={this.state.password}
+                                    value={this.state.formulario.password}
                                     className="form-control"
+                                    disabled={
+                                        this.state.formularioInput.password
+                                    }
                                 />
                                 <p className="error-validacion">
                                     {this.state.formularioErrores.password}
@@ -310,8 +335,12 @@ class EditUserData extends React.Component {
                                     name="verifyPassword"
                                     type="password"
                                     onChange={this.handleInputChange}
-                                    value={this.state.verifyPassword}
+                                    value={this.state.formulario.verifyPassword}
                                     className="form-control"
+                                    disabled={
+                                        this.state.formularioInput
+                                            .verifyPassword
+                                    }
                                 />
                                 <p className="error-validacion">
                                     {
