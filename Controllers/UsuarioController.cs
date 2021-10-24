@@ -122,15 +122,16 @@ namespace SQL_Judge.Controllers
         /// </remarks>
         /// <response code="200">El usuario se modificó correctamente</response>
         /// <response code="400">El usuario a modificar no existe</response>
-        [HttpPost("editarUsuario")]
+        [HttpPost("ModificarUsuario")]
         [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public IActionResult modificarUsuario([FromBody] UsuarioRequest value)
+        public IActionResult ModificarUsuario([FromBody] ModificarRequest value)
         {
             Usuario user;
             using (SQLJudgeContext context = new SQLJudgeContext())
             {
+
                 var Usuario = context.Usuarios.ToList();
                 user = Usuario.FirstOrDefault(u => u.IdUsuario == value.id);
                 if (user != null)
