@@ -68,6 +68,7 @@ class Registro extends React.Component {
                     pressedButton={this.RequestRegisterUser}
                     errorNombre={this.state.errorNombreUsuario}
                     formularioInput={{
+                        id: false,
                         nombreUsuario: false,
                         nombre: false,
                         apellidoPaterno: false,
@@ -81,6 +82,7 @@ class Registro extends React.Component {
                         codigoRegistro: false,
                     }}
                     formulario={{
+                        id: "",
                         nombreUsuario: "",
                         nombre: "",
                         apellidoPaterno: "",
