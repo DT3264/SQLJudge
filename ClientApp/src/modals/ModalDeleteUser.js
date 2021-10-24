@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal,Button} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-class ModalDeleteAdmin extends React.Component{
+class ModalDeleteUser extends React.Component{
 
     //cierra el modal
     handleClose = () => {
@@ -17,14 +17,14 @@ class ModalDeleteAdmin extends React.Component{
                         <Modal.Title> Eliminar Usuario </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <p>Estas seguro de que quieres eliminar a {this.props.name}?</p>
+                        <p>Estas seguro de que quieres eliminar a {this.props.nombre} {this.props.id}?</p>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="danger" onClick={this.handleClose}>Cancelar</Button>
                         
                         <Button 
                             variant="primary" 
-                            /*onClick= { () => this.props.deleteAdmin(this.props.idAdmin) }*/
+                            onClick= { () => this.props.deleteUser(this.props.id) }
                         >
                             Eliminar
                         </Button>
@@ -38,4 +38,4 @@ class ModalDeleteAdmin extends React.Component{
 
 }
 
-export default ModalDeleteAdmin;
+export default ModalDeleteUser;

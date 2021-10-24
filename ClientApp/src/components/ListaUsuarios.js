@@ -5,6 +5,7 @@ import { withRouter } from "react-router";
 import React from "react";
 import EditUserData from "./EditUserData";
 import Login from "./Login";
+import ModalDeleteUser from "../modals/ModalDeleteUser";
 
 
 class ListaUsuarios extends React.Component{
@@ -15,7 +16,7 @@ class ListaUsuarios extends React.Component{
         apellidoP : '',
         apellidoM : '',
         usuarios : [],
-        modalShow : false
+        showDeleteUser : false
     }
 
     componentDidMount (){
@@ -46,6 +47,10 @@ class ListaUsuarios extends React.Component{
         console.log(respuesta.data);
     }
 
+    addUser = async () =>{
+
+    }
+
     deleteUser = async (id) => {
         var valueToken = "Bearer " + sessionStorage.getItem('token');
         const headers = {
@@ -58,14 +63,20 @@ class ListaUsuarios extends React.Component{
                 headers : headers
             }
         );
+        this.handleCloseDeleteUser();
         this.loadUsers();
     }
 
-    handleCloseDeleteUser = () => this.setState({showDeleteStudent : false});
-    handleOpenDeleteUser = ( noControl ) => { 
+    editUser = async (id, nombre, apellidoP, apellidoM, correo, usuario, clave, pais, estado, escuela, tipo) => {
+
+    }
+
+    handleCloseDeleteUser = () => this.setState({showDeleteUser : false});
+    handleOpenDeleteUser = ( nombre, id) => { 
         this.setState({
-            showDeleteStudent : true,
-            noControl : noControl
+            showDeleteUser : true,
+            nombre : nombre,
+            idUsuario : id
         }); 
     }
 
@@ -73,13 +84,13 @@ class ListaUsuarios extends React.Component{
         const ListaAMostrar = this.state.usuarios.map((usuario) => {
             return (
                 <tr>
-                    <td>{usuario.nombre}</td>
-                    <td>{usuario.edad}</td>
-                    <td>hola</td>
+                    <td>{usuario.usuario}</td>
+                    <td>{usuario.nombre} {usuario.apellidoP} {usuario.apellidoM}</td>
+                    <td>{usuario.tipo}</td>
                     <td>
                         <button
                             className="btn btn-danger"
-                            onClick={() => this.deleteUser(usuario.id)}
+                            onClick={() => this.handleOpenDeleteUser(usuario.nombre, usuario.id)}
                         >
                             Eliminar
                         </button>
@@ -154,7 +165,14 @@ class ListaUsuarios extends React.Component{
                         codigoRegistro: "",
                     }}
                 />
-
+                <ModalDeleteUser
+                    show = {this.state.showDeleteUser}
+                    handleClose = {this.handleCloseDeleteUser}
+                    handleOpen = {this.handleOpenDeleteUser}
+                    nombre = {this.state.nombre}
+                    id = {this.state.idUsuario}
+                    deleteUser = {this.deleteUser}
+                />
                 <button>agregar usuario</button>
             </div>
         );
