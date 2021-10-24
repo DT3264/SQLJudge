@@ -33,6 +33,21 @@ class EditUserData extends React.Component {
         codigoRegistro: false,
     };
 
+    componentDidUpdate(prevProps) {
+        if (this.props.formulario.nombre !== prevProps.formulario.nombre) {
+            this.setState({
+                formularioErrores: {
+                    ...this.state.formularioErrores,
+                    nombreUsuario: this.props.errorNombre,
+                },
+            });
+            this.setState({
+                formularioInput: this.props.formularioInput,
+                formulario: this.props.formulario,
+            });
+        }
+    }
+
     componentDidMount() {
         this.setState({
             formularioErrores: {
