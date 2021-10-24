@@ -17,7 +17,7 @@ class ModalDeleteUser extends React.Component{
                         <Modal.Title> Eliminar Usuario </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <p>Estas seguro de que quieres eliminar a {this.props.nombre} {this.props.id}?</p>
+                        <p>Estas seguro de que quieres eliminar a {this.props.nombre}?</p>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="danger" onClick={this.handleClose}>Cancelar</Button>

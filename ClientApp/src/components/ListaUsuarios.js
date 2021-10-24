@@ -8,95 +8,209 @@ import Login from "./Login";
 import ModalDeleteUser from "../modals/ModalDeleteUser";
 
 
-class ListaUsuarios extends React.Component{
-
+class ListaUsuarios extends React.Component {
     state = {
-        idUsuario : 0,
-        nombre : '',
-        apellidoP : '',
-        apellidoM : '',
-        usuarios : [],
-        showDeleteUser : false
-    }
+        idUsuario: 0,
+        apellidoP: "",
+        apellidoM: "",
+        usuarios: [],
+        showDeleteUser: false,
+        showEditUser: false,
+        showAddUser : false,
 
-    componentDidMount (){
+        nombreUsuario: "",
+        nombre: "",
+        apellidoPaterno: "",
+        apellidoMaterno: "",
+        correo: "",
+        pais: "",
+        estado: "",
+        escuela: "",
+        password: "",
+        verifyPassword: "",
+        codigoRegistro: "",
+    };
+
+    componentDidMount() {
         this.loadUsers();
     }
 
     mostrarAlerta = (nombre) => {
-        
         alert("hola " + nombre);
     };
-    
+
     abrirModal = () => {
-        this.state.modalShow = true
+        this.state.modalShow = true;
     };
 
     loadUsers = async () => {
-        var valueToken = "Bearer " + sessionStorage.getItem('token');
+        var valueToken = "Bearer " + sessionStorage.getItem("token");
         const headers = {
             "Content-Type": "application/json",
-            Authorization: valueToken
+            Authorization: valueToken,
         };
-        const respuesta = await axios.post( '/api/Usuario/obtenerUsuarios',{},{
-                headers : headers
+        const respuesta = await axios.post(
+            "/api/Usuario/obtenerUsuarios",
+            {},
+            {
+                headers: headers,
             }
         );
-        this.setState({usuarios : respuesta.data});
-        this.setState({idUsuario : respuesta.data.idUsuario});
+        this.setState({ usuarios: respuesta.data });
+        this.setState({ idUsuario: respuesta.data.idUsuario });
         console.log(respuesta.data);
-    }
+    };
 
-    addUser = async () =>{
-
-    }
+    addUser = async (usuario) => {
+        try {
+            await axios.post("/api/Registro", {
+                nombre: usuario.nombre,
+                apellidoP: usuario.apellidoPaterno,
+                apellidoM: usuario.apellidoMaterno,
+                correo: usuario.correo,
+                usuario: usuario.nombreUsuario,
+                clave: usuario.password,
+                pais: usuario.pais,
+                estado: usuario.estado,
+                escuela: usuario.escuela,
+                tipo: "Alumno",
+                codigo: usuario.codigoRegistro,
+            });
+            this.props.cerrarModal();
+            this.props.history.push("/login");
+            this.handleCloseEditUser();
+            this.loadUsers();
+            return true;
+        } catch (error) {
+            this.setState({
+                errorNombreUsuario: "El este nombre de usuario ya existe",
+            });
+            return false;
+        }
+        
+    };
 
     deleteUser = async (id) => {
-        var valueToken = "Bearer " + sessionStorage.getItem('token');
+        var valueToken = "Bearer " + sessionStorage.getItem("token");
         const headers = {
             "Content-Type": "application/json",
-            Authorization: valueToken
+            Authorization: valueToken,
         };
-        const respuesta = await axios.post('/api/Usuario/eliminarUsuario',{
-                id : id
-            },{
-                headers : headers
+        const respuesta = await axios.post(
+            "/api/Usuario/eliminarUsuario",
+            {
+                id: id,
+            },
+            {
+                headers: headers,
             }
         );
         this.handleCloseDeleteUser();
         this.loadUsers();
-    }
+    };
 
-    editUser = async (id, nombre, apellidoP, apellidoM, correo, usuario, clave, pais, estado, escuela, tipo) => {
+    editUser = async (usuario) => {
+        var valueToken = "Bearer " + sessionStorage.getItem("token");
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: valueToken,
+        };
+        await axios.post(
+            "/api/Usuario/editarUsuario",
+            {
+                id: 4,
+                nombre: usuario.nombre,
+                apellidoP: usuario.apellidoPaterno,
+                apellidoM: usuario.apellidoMaterno,
+                correo: usuario.correo,
+                usuario: usuario.nombreUsuario,
+                clave: usuario.password,
+                pais: usuario.pais,
+                estado: usuario.estado,
+                escuela: usuario.escuela,
+                tipo: "Alumno",
+            },
+            {
+                headers: headers,
+            }
+        );
+        this.handleCloseEditUser();
+        this.loadUsers();
+    };
 
-    }
-
-    handleCloseDeleteUser = () => this.setState({showDeleteUser : false});
-    handleOpenDeleteUser = ( nombre, id) => { 
+    handleCloseDeleteUser = () => this.setState({ showDeleteUser: false });
+    handleOpenDeleteUser = (nombre, id) => {
         this.setState({
-            showDeleteUser : true,
-            nombre : nombre,
-            idUsuario : id
-        }); 
-    }
+            showDeleteUser: true,
+            nombre: nombre,
+            idUsuario: id,
+        });
+    };
 
-    render(){
+    handleCloseEditUser = () => {
+        this.setState({ showEditUser: false });
+    };
+    handleOpenEditUser = (usuario) => {
+        this.setState({
+            showEditUser: true,
+            nombreUsuario: usuario.usuario,
+            nombre: usuario.nombre,
+            apellidoPaterno: usuario.apellidoP,
+            apellidoMaterno: usuario.apellidoM,
+            correo: usuario.correo,
+            pais: usuario.pais,
+            estado: usuario.estado,
+            escuela: usuario.escuela,
+            password: "",
+            verifyPassword: "",
+            codigoRegistro: "1234567890",
+        });
+    };
+
+    handleCloseAddUser = () => {
+        this.setState({ showAddUser: false });
+    };
+    handleOpenAddUser = () => {
+        this.setState({
+            showAddUser: true,
+            nombreUsuario: "",
+            nombre: "",
+            apellidoPaterno: "",
+            apellidoMaterno: "",
+            correo: "",
+            pais: "",
+            estado: "",
+            escuela: "",
+            password: "",
+            verifyPassword: "",
+            codigoRegistro: "",
+        });
+    };
+
+    render() {
         const ListaAMostrar = this.state.usuarios.map((usuario) => {
             return (
                 <tr>
                     <td>{usuario.usuario}</td>
-                    <td>{usuario.nombre} {usuario.apellidoP} {usuario.apellidoM}</td>
+                    <td>
+                        {usuario.nombre} {usuario.apellidoP} {usuario.apellidoM}
+                    </td>
                     <td>{usuario.tipo}</td>
                     <td>
                         <button
                             className="btn btn-danger"
-                            onClick={() => this.handleOpenDeleteUser(usuario.nombre, usuario.id)}
+                            onClick={() =>
+                                this.handleOpenDeleteUser(
+                                    usuario.nombre,
+                                    usuario.id
+                                )
+                            }
                         >
                             Eliminar
                         </button>
                         <button
                             className="btn btn-warning"
-                            onClick={() => this.abrirModal}
+                            onClick={() => this.handleOpenEditUser(usuario)}
                         >
                             Editar
                         </button>
@@ -104,40 +218,44 @@ class ListaUsuarios extends React.Component{
                 </tr>
             );
         });
-        
+
         return (
             <div>
-                
-                <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '20vh'}}>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "20vh",
+                    }}
+                >
                     <h1> Usuarios Existentes </h1>
                 </div>
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
-                        <table className="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th scope="col">Usuario</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Tipo</th>
-                                <th scope="col">Acciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {ListaAMostrar}
-                            </tbody>
-                        </table>
+                            <table className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Usuario</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>{ListaAMostrar}</tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
                 <EditUserData
-                    title="Registro"
-                    closeModal={this.toggle}
-                    show={this.state.modalShow}
-                    msgButton="Registrarme"
-                    pressedButton={this.RequestRegisterUser}
-                    errorNombre={this.state.errorNombreUsuario}
+                    title="Agregar Usuario"
+                    closeModal={this.handleCloseAddUser}
+                    show={this.state.showAddUser}
+                    msgButton="Agregar"
+                    pressedButton={this.addUser}
+                    errorNombre=""
                     formularioInput={{
                         nombreUsuario: false,
                         nombre: false,
@@ -152,28 +270,72 @@ class ListaUsuarios extends React.Component{
                         codigoRegistro: false,
                     }}
                     formulario={{
-                        nombreUsuario: "",
-                        nombre: "",
-                        apellidoPaterno: "",
-                        apellidoMaterno: "",
-                        correo: "",
-                        pais: "",
-                        estado: "",
-                        escuela: "",
-                        password: "",
-                        verifyPassword: "",
-                        codigoRegistro: "",
+                        id: this.state.idUsuario,
+                        nombreUsuario: this.state.nombreUsuario,
+                        nombre: this.state.nombre,
+                        apellidoPaterno: this.state.apellidoPaterno,
+                        apellidoMaterno: this.state.apellidoMaterno,
+                        correo: this.state.correo,
+                        pais: this.state.pais,
+                        estado: this.state.estado,
+                        escuela: this.state.escuela,
+                        password: this.state.password,
+                        verifyPassword: this.state.verifyPassword,
+                        codigoRegistro: this.state.codigoRegistro,
                     }}
                 />
-                <ModalDeleteUser
-                    show = {this.state.showDeleteUser}
-                    handleClose = {this.handleCloseDeleteUser}
-                    handleOpen = {this.handleOpenDeleteUser}
-                    nombre = {this.state.nombre}
-                    id = {this.state.idUsuario}
-                    deleteUser = {this.deleteUser}
+
+                <EditUserData
+                    title="Editar Usuario"
+                    closeModal={this.handleCloseEditUser}
+                    show={this.state.showEditUser}
+                    msgButton="Actualizar"
+                    pressedButton={this.editUser}
+                    errorNombre=""
+                    formularioInput={{
+                        nombreUsuario: true,
+                        nombre: false,
+                        apellidoPaterno: false,
+                        apellidoMaterno: false,
+                        correo: false,
+                        pais: false,
+                        estado: false,
+                        escuela: false,
+                        password: false,
+                        verifyPassword: false,
+                        codigoRegistro: true,
+                    }}
+                    formulario={{
+                        id: this.state.idUsuario,
+                        nombreUsuario: this.state.nombreUsuario,
+                        nombre: this.state.nombre,
+                        apellidoPaterno: this.state.apellidoPaterno,
+                        apellidoMaterno: this.state.apellidoMaterno,
+                        correo: this.state.correo,
+                        pais: this.state.pais,
+                        estado: this.state.estado,
+                        escuela: this.state.escuela,
+                        password: this.state.password,
+                        verifyPassword: this.state.verifyPassword,
+                        codigoRegistro: this.state.codigoRegistro,
+                    }}
                 />
-                <button>agregar usuario</button>
+
+                <ModalDeleteUser
+                    show={this.state.showDeleteUser}
+                    handleClose={this.handleCloseDeleteUser}
+                    handleOpen={this.handleOpenDeleteUser}
+                    nombre={this.state.nombre}
+                    id={this.state.idUsuario}
+                    deleteUser={this.deleteUser}
+                    usuario = {this.state.nombreUsuario}
+                />
+                <button
+                    className="btn btn-primary"
+                    onClick={() => this.handleOpenAddUser()}
+                >
+                    Agregar Usuario
+                </button>
             </div>
         );
     }
