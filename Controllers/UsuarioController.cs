@@ -26,32 +26,33 @@ namespace SQL_Judge.Controllers
         ///
         ///     POST Usuario/obtenerUsuarios
         ///     [
-        ///          {
-        ///            "idUsuario": 1,
-        ///            "nombre": "Alexia",
-        ///            "apellidoP": "Martinez",
-        ///            "apellidoM": "Aguilera"
-        ///          },
-        ///          {
-        ///            "idUsuario": 2,
-        ///            "nombre": "Dennis",
-        ///            "apellidoP": "Bucio",
-        ///            "apellidoM": "Palmerin"
-        ///          },
+	    ///       {
+        ///         "id":11,
+        ///         "nombre":"Juan",
+        ///         "apellidoP":"Perez",
+        ///         "apellidoM":"Ruiz",
+        ///         "correo":"elJuan@gmail.com",
+        ///         "usuario":"Juannp",
+        ///         "clave": "78d7c846f4",
+        ///         "pais":"Mexico",
+        ///         "estado":"Guanajuato",
+        ///         "escuela":"ITSUR",
+        ///         "tipo":"Alumno"
+        ///         }
         ///     ]
         ///
         /// </remarks>
         /// <response code="200">Lista de usuarios registrados</response>
         [Authorize(Policy = "Admins")]
         [HttpPost("obtenerUsuarios")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UsuarioRequest), StatusCodes.Status200OK)]
         public IActionResult listaUsuarios()
         {
             using (SQLJudgeContext context = new SQLJudgeContext())
             {
                 var Usuarios = context.Usuarios.ToList();
                 var users = from us in Usuarios
-                            select new { us.IdUsuario, us.Nombre, us.ApellidoP, us.ApellidoM };
+                            select new UsuarioRequest(us);
                 return Ok(users);
             }
         }
