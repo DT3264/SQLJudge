@@ -29,6 +29,7 @@ class ListaUsuarios extends React.Component {
         password: "",
         verifyPassword: "",
         codigoRegistro: "",
+        errorNombreUsuario : ""
     };
 
     componentDidMount() {
@@ -73,12 +74,10 @@ class ListaUsuarios extends React.Component {
                 pais: usuario.pais,
                 estado: usuario.estado,
                 escuela: usuario.escuela,
-                tipo: "Alumno",
+                tipo: "Admin",
                 codigo: usuario.codigoRegistro,
             });
-            this.props.cerrarModal();
-            this.props.history.push("/login");
-            this.handleCloseEditUser();
+            this.handleCloseAddUser();
             this.loadUsers();
             return true;
         } catch (error) {
@@ -115,10 +114,12 @@ class ListaUsuarios extends React.Component {
             "Content-Type": "application/json",
             Authorization: valueToken,
         };
+
+        console.log(usuario.id);
         await axios.post(
-            "/api/Usuario/editarUsuario",
+            "/api/Usuario/ModificarUsuario",
             {
-                id: 4,
+                id: usuario.id,
                 nombre: usuario.nombre,
                 apellidoP: usuario.apellidoPaterno,
                 apellidoM: usuario.apellidoMaterno,
@@ -151,7 +152,9 @@ class ListaUsuarios extends React.Component {
         this.setState({ showEditUser: false });
     };
     handleOpenEditUser = (usuario) => {
+        //console.log(usuario.id);
         this.setState({
+            idUsuario : usuario.id,
             showEditUser: true,
             nombreUsuario: usuario.usuario,
             nombre: usuario.nombre,
@@ -255,8 +258,9 @@ class ListaUsuarios extends React.Component {
                     show={this.state.showAddUser}
                     msgButton="Agregar"
                     pressedButton={this.addUser}
-                    errorNombre=""
+                    errorNombre={this.state.errorNombreUsuario}
                     formularioInput={{
+                        id: false,
                         nombreUsuario: false,
                         nombre: false,
                         apellidoPaterno: false,
@@ -270,18 +274,18 @@ class ListaUsuarios extends React.Component {
                         codigoRegistro: false,
                     }}
                     formulario={{
-                        id: this.state.idUsuario,
-                        nombreUsuario: this.state.nombreUsuario,
-                        nombre: this.state.nombre,
-                        apellidoPaterno: this.state.apellidoPaterno,
-                        apellidoMaterno: this.state.apellidoMaterno,
-                        correo: this.state.correo,
-                        pais: this.state.pais,
-                        estado: this.state.estado,
-                        escuela: this.state.escuela,
-                        password: this.state.password,
-                        verifyPassword: this.state.verifyPassword,
-                        codigoRegistro: this.state.codigoRegistro,
+                        id: "",
+                        nombreUsuario: "",
+                        nombre: "",
+                        apellidoPaterno: "",
+                        apellidoMaterno: "",
+                        correo: "",
+                        pais: "",
+                        estado: "",
+                        escuela: "",
+                        password: "",
+                        verifyPassword: "",
+                        codigoRegistro: "",
                     }}
                 />
 
@@ -293,6 +297,7 @@ class ListaUsuarios extends React.Component {
                     pressedButton={this.editUser}
                     errorNombre=""
                     formularioInput={{
+                        id : false,
                         nombreUsuario: true,
                         nombre: false,
                         apellidoPaterno: false,
