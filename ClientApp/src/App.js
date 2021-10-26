@@ -11,6 +11,8 @@ import GenerarCodigoRegistro from './components/GenerarCodigoRegistro';
 import Login from './components/Login';
 import Registro from './components/Registro';
 import ListaUsuarios from './components/ListaUsuarios';
+import Problemset from './components/Problemset.js';
+import VistaProblema from './components/VistaProblema.js';
 
 export default class App extends Component {
   static displayName = App.name;
@@ -27,6 +29,8 @@ export default class App extends Component {
             <Route path='/login' component={Login}/>
             <Route path='/registro' component={Registro}/>
             <Route path='/lista-usuarios' component={ListaUsuarios}/>
+            <Route path="/problemset" component={Problemset}/>
+            <Route path="/problem" component={VistaProblema} /> 
             <Route path='*' component={PageNotFound}/>
         </Switch>
       </Layout>

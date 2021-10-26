@@ -6,6 +6,7 @@ import React from "react";
 import EditUserData from "./EditUserData";
 import Login from "./Login";
 import ModalDeleteUser from "../modals/ModalDeleteUser";
+import withAuthAdmin from "./Auth/withAuthAdmin";
 
 
 class ListaUsuarios extends React.Component {
@@ -346,4 +347,4 @@ class ListaUsuarios extends React.Component {
     }
 }
 
-export default ListaUsuarios;
+export default  withAuthAdmin( ListaUsuarios );

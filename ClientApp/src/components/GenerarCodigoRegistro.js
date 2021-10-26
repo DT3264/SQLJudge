@@ -1,5 +1,6 @@
 import React from "react";
 import './GenerarCodigoRegistro.css';
+import withAuthAdmin from './Auth/withAuthAdmin.js';
 import axios from 'axios';
 
 class GenerarCodigoRegistro extends React.Component {
@@ -106,4 +107,4 @@ class GenerarCodigoRegistro extends React.Component {
 
  }
 
-export default GenerarCodigoRegistro;
+export default withAuthAdmin( GenerarCodigoRegistro );
