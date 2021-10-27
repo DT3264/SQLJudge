@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SQL_Judge.Responses
 {
-    public class ObtenerCategoriasResponse
+    public class ObtenerBasesResponse
     {
         [DefaultValue(1)]
-        public int idCategoria { get; set; }
-        [DefaultValue("Join")]
-        public string nombre { get; set; }
+        public int IdBase { get; set; }
+        [DefaultValue("nwind")]
+        public string Nombre { get; set; }
     }
 }

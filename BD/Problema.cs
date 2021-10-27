@@ -17,11 +17,12 @@ namespace SQL_Judge.BD
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public string Solucion { get; set; }
-        public string BaseDeDatos { get; set; }
-        public int Categoria { get; set; }
+        public int IdBase { get; set; }
+        public int IdCategoria { get; set; }
         public int Dificultad { get; set; }
 
-        public virtual Categoria CategoriaNavigation { get; set; }
+        public virtual Basesdedato IdBaseNavigation { get; set; }
+        public virtual Categoria IdCategoriaNavigation { get; set; }
         public virtual ICollection<Envio> Envios { get; set; }
         public virtual ICollection<Problemastarea> Problemastareas { get; set; }
     }

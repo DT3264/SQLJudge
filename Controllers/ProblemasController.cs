@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SQL_Judge.BD;
 using SQL_Judge.Requests;
+using SQL_Judge.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,34 +18,35 @@ namespace SQL_Judge.Controllers
         /// <summary>
         /// Inserta un nuevo problema
         /// </summary>
-        /// /// Ejemplo:
+        /// /// <remarks>
+        /// Ejemplo:
         ///
-        ///     POST /api/problemas/agregaProblema
+        ///     POST /api/problemas/agregarProblema
         ///     {
-        ///        "Nombre": "Las montañas más altas",
-        ///        "Descripcion": "En este problema debes seleccionar las 10 montañas más altas",
-        ///        "Solucion": "select * from motañas order by altura limit 10",
-        ///        "BaseDeDatos": "zonas",
-        ///        "Categoria": 1,
-        ///        "Dificultad": 500
+        ///        "nombre": "Las montañas más altas",
+        ///        "descripcion": "En este problema debes seleccionar las 10 montañas más altas",
+        ///        "solucion": "select * from motañas order by altura limit 10",
+        ///        "idBaseDeDatos": "zonas",
+        ///        "idCategoria": 1,
+        ///        "dificultad": 500
         ///     }
         ///
         /// </remarks>
         /// <response code="200">El problema se agregó exitosamente</response>
-        [HttpPost("agregaProblema")]
+        [HttpPost("agregarProblema")]
         [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public IActionResult AgregaProblema([FromBody]AgregarProblemaRequest request)
+        public IActionResult AgregarProblema([FromBody]AgregarProblemaRequest request)
         {
             var dbContext = new SQLJudgeContext();
             var nuevoProblema = new Problema()
             {
-                Nombre = request.Nombre,
-                Descripcion = request.Descripcion,
-                Solucion = request.Solucion,
-                BaseDeDatos = request.BaseDeDatos,
-                Categoria = request.Categoria,
-                Dificultad = request.Dificultad
+                Nombre = request.nombre,
+                Descripcion = request.descripcion,
+                Solucion = request.solucion,
+                IdBase = request.idBaseDeDatos,
+                IdCategoria = request.idCategoria,
+                Dificultad = request.dificultad
             };
             dbContext.Add(nuevoProblema);
             dbContext.SaveChanges();
@@ -52,19 +54,20 @@ namespace SQL_Judge.Controllers
         }
 
         /// <summary>
-        /// Inserta un nuevo problema
+        /// Modifica un problema
         /// </summary>
-        /// /// Ejemplo:
+        /// /// <remarks>
+        /// Ejemplo:
         ///
         ///     POST /api/problemas/modificarProblema
         ///     {
-        ///        "IdProblema": 1,
-        ///        "Nombre": "Las montañas más altas",
-        ///        "Descripcion": "En este problema debes seleccionar las 20 montañas más altas",
-        ///        "Solucion": "select * from motañas order by altura limit 20",
-        ///        "BaseDeDatos": "zonas",
-        ///        "Categoria": 1,
-        ///        "Dificultad": 500
+        ///        "idProblema": 1,
+        ///        "nombre": "Las montañas más altas",
+        ///        "descripcion": "En este problema debes seleccionar las 20 montañas más altas",
+        ///        "solucion": "select * from motañas order by altura limit 20",
+        ///        "idBaseDeDatos": "zonas",
+        ///        "idCategoria": 1,
+        ///        "dificultad": 500
         ///     }
         ///
         /// </remarks>
@@ -77,17 +80,65 @@ namespace SQL_Judge.Controllers
             var dbContext = new SQLJudgeContext();
             var problemaAActualizar = new Problema()
             {
-                IdProblema = request.IdProblema,
-                Nombre = request.Nombre,
-                Descripcion = request.Descripcion,
-                Solucion = request.Solucion,
-                BaseDeDatos = request.BaseDeDatos,
-                Categoria = request.Categoria,
-                Dificultad = request.Dificultad
+                IdProblema = request.idProblema,
+                Nombre = request.nombre,
+                Descripcion = request.descripcion,
+                Solucion = request.solucion,
+                IdBase = request.idBaseDeDatos,
+                IdCategoria = request.idCategoria,
+                Dificultad = request.dificultad
             };
             dbContext.Update(problemaAActualizar);
             dbContext.SaveChanges();
             return Ok("Problema modificado correctamente");
+        }
+
+        /// <summary>
+        /// Elimina un problema
+        /// </summary>
+        /// /// <remarks>
+        ///Ejemplo:
+        ///
+        ///     POST /api/problemas/eliminarProblema
+        ///     {
+        ///        "idProblema": 1
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">El problema se eliminó exitosamente</response>
+        [HttpPost("eliminarProblema")]
+        [Authorize(Policy = "Admins")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public IActionResult EliminaProblema([FromBody] EliminaProblemaRequest request)
+        {
+            var dbContext = new SQLJudgeContext();
+            try
+            {
+                var problemaAEliminar = dbContext.Problemas.First(p => p.IdProblema == request.idProblema);
+                dbContext.Remove(problemaAEliminar);
+                dbContext.SaveChanges();
+                return Ok("Problema eliminado correctamente");
+            }
+            catch
+            {
+                return Ok("El problema a eliminar no existe");
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los problemas existentes con todos los datos
+        /// </summary>
+        /// <response code="200">El problema se eliminó exitosamente</response>
+        [HttpPost("obtenerProblemasCompletos")]
+        [Authorize(Policy = "Admins")]
+        [ProducesResponseType(typeof(List<ObtenerProblemasResponse>), StatusCodes.Status200OK)]
+        public IActionResult ObtenerProblemasCompletos()
+        {
+            var dbContext = new SQLJudgeContext();
+            var problemas = from c in dbContext.Problemas
+                            select new { c.IdProblema, c.Nombre, c.Descripcion, c.Solucion,  c.IdBase, c.IdCategoria, c.Dificultad};
+
+            return Ok(problemas);
         }
     }
 }

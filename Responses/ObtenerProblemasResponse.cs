@@ -4,17 +4,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SQL_Judge.Requests
+namespace SQL_Judge.Responses
 {
-    public class AgregarProblemaRequest
+    public class ObtenerProblemasResponse
     {
+        [DefaultValue(1)]
+        public string idProblema { get; set; }
         [DefaultValue("Las montañas más altas")]
         public string nombre { get; set; }
         [DefaultValue("En este problema debes seleccionar las 10 montañas más altas")]
         public string descripcion { get; set; }
         [DefaultValue("select * from motañas order by altura limit 10")]
         public string solucion { get; set; }
-        [DefaultValue(1)]
+        [DefaultValue("zonas")]
         public int idBaseDeDatos { get; set; }
         [DefaultValue(1)]
         public int idCategoria { get; set; }
