@@ -45,6 +45,16 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `SQLJudge`.`BasesDeDatos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SQLJudge`.`BasesDeDatos` (
+  `idBase` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idBase`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `SQLJudge`.`Problemas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`Problemas` (
@@ -53,13 +63,20 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`Problemas` (
   `descripcion` TEXT NOT NULL,
   `solucion` TEXT NOT NULL,
   `baseDeDatos` VARCHAR(20) NOT NULL,
-  `categoria` INT NOT NULL,
+  `idCategoria` INT NOT NULL,
   `dificultad` INT NOT NULL,
+  `idBase` INT NOT NULL,
   PRIMARY KEY (`idProblema`),
-  INDEX `fk_Problemas_Categorias1_idx` (`categoria` ASC) VISIBLE,
+  INDEX `fk_Problemas_Categorias1_idx` (`idCategoria` ASC) VISIBLE,
+  INDEX `fk_Problemas_BasesDeDatos1_idx` (`idBase` ASC) VISIBLE,
   CONSTRAINT `fk_Problemas_Categorias1`
-    FOREIGN KEY (`categoria`)
+    FOREIGN KEY (`idCategoria`)
     REFERENCES `SQLJudge`.`Categorias` (`idCategoria`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Problemas_BasesDeDatos1`
+    FOREIGN KEY (`idBase`)
+    REFERENCES `SQLJudge`.`BasesDeDatos` (`idBase`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
