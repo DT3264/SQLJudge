@@ -9,18 +9,18 @@ namespace SQL_Judge.Requests
     public class ModificarProblemaRequest
     {
         [DefaultValue(1)]
-        public int IdProblema { get; set; }
+        public int idProblema { get; set; }
         [DefaultValue("Las montañas más altas")]
-        public string Nombre { get; set; }
+        public string nombre { get; set; }
         [DefaultValue("En este problema debes seleccionar las 10 montañas más altas")]
-        public string Descripcion { get; set; }
+        public string descripcion { get; set; }
         [DefaultValue("select * from motañas order by altura limit 10")]
-        public string Solucion { get; set; }
-        [DefaultValue("zonas")]
-        public string BaseDeDatos { get; set; }
+        public string solucion { get; set; }
         [DefaultValue(1)]
-        public int Categoria { get; set; }
+        public int idBaseDeDatos { get; set; }
+        [DefaultValue(1)]
+        public int idCategoria { get; set; }
         [DefaultValue(10)]
-        public int Dificultad { get; set; }
+        public int dificultad { get; set; }
     }
 }
