@@ -1,5 +1,4 @@
 ﻿using System;
-using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -7,17 +6,18 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SQL_Judge.BD
 {
-    public partial class SQLJudgeContext : DbContext
+    public partial class sqljudgeContext : DbContext
     {
-        public SQLJudgeContext()
+        public sqljudgeContext()
         {
         }
 
-        public SQLJudgeContext(DbContextOptions<SQLJudgeContext> options)
+        public sqljudgeContext(DbContextOptions<sqljudgeContext> options)
             : base(options)
         {
         }
 
+        public virtual DbSet<Basesdedato> Basesdedatos { get; set; }
         public virtual DbSet<Categoria> Categorias { get; set; }
         public virtual DbSet<Codigosregistro> Codigosregistros { get; set; }
         public virtual DbSet<Envio> Envios { get; set; }
@@ -40,6 +40,21 @@ namespace SQL_Judge.BD
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Basesdedato>(entity =>
+            {
+                entity.HasKey(e => e.IdBase)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("basesdedatos");
+
+                entity.Property(e => e.IdBase).HasColumnName("idBase");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("nombre");
+            });
+
             modelBuilder.Entity<Categoria>(entity =>
             {
                 entity.HasKey(e => e.IdCategoria)
@@ -107,13 +122,11 @@ namespace SQL_Judge.BD
                 entity.HasOne(d => d.IdProblemaNavigation)
                     .WithMany(p => p.Envios)
                     .HasForeignKey(d => d.IdProblema)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Usuarios_has_Problemas_Problemas1");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Envios)
                     .HasForeignKey(d => d.IdUsuario)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Usuarios_has_Problemas_Usuarios");
             });
 
@@ -143,7 +156,6 @@ namespace SQL_Judge.BD
                 entity.HasOne(d => d.DocenteNavigation)
                     .WithMany(p => p.Grupos)
                     .HasForeignKey(d => d.Docente)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Grupo_Usuarios1");
             });
 
@@ -154,7 +166,9 @@ namespace SQL_Judge.BD
 
                 entity.ToTable("problemas");
 
-                entity.HasIndex(e => e.Categoria, "fk_Problemas_Categorias1_idx");
+                entity.HasIndex(e => e.IdBase, "fk_Problemas_BasesDeDatos1_idx");
+
+                entity.HasIndex(e => e.IdCategoria, "fk_Problemas_Categorias1_idx");
 
                 entity.Property(e => e.IdProblema).HasColumnName("idProblema");
 
@@ -163,13 +177,15 @@ namespace SQL_Judge.BD
                     .HasMaxLength(20)
                     .HasColumnName("baseDeDatos");
 
-                entity.Property(e => e.Categoria).HasColumnName("categoria");
-
                 entity.Property(e => e.Descripcion)
                     .IsRequired()
                     .HasColumnName("descripcion");
 
                 entity.Property(e => e.Dificultad).HasColumnName("dificultad");
+
+                entity.Property(e => e.IdBase).HasColumnName("idBase");
+
+                entity.Property(e => e.IdCategoria).HasColumnName("idCategoria");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
@@ -180,10 +196,14 @@ namespace SQL_Judge.BD
                     .IsRequired()
                     .HasColumnName("solucion");
 
-                entity.HasOne(d => d.CategoriaNavigation)
+                entity.HasOne(d => d.IdBaseNavigation)
                     .WithMany(p => p.Problemas)
-                    .HasForeignKey(d => d.Categoria)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasForeignKey(d => d.IdBase)
+                    .HasConstraintName("fk_Problemas_BasesDeDatos1");
+
+                entity.HasOne(d => d.IdCategoriaNavigation)
+                    .WithMany(p => p.Problemas)
+                    .HasForeignKey(d => d.IdCategoria)
                     .HasConstraintName("fk_Problemas_Categorias1");
             });
 
@@ -205,13 +225,11 @@ namespace SQL_Judge.BD
                 entity.HasOne(d => d.IdProblemaNavigation)
                     .WithMany(p => p.Problemastareas)
                     .HasForeignKey(d => d.IdProblema)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Tareas_has_Problemas_Problemas1");
 
                 entity.HasOne(d => d.IdTareaNavigation)
                     .WithMany(p => p.Problemastareas)
                     .HasForeignKey(d => d.IdTarea)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Tareas_has_Problemas_Tareas1");
             });
 
@@ -233,13 +251,11 @@ namespace SQL_Judge.BD
                 entity.HasOne(d => d.IdGrupoNavigation)
                     .WithMany(p => p.Registrogrupos)
                     .HasForeignKey(d => d.IdGrupo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Usuarios_has_Grupo_Grupo1");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Registrogrupos)
                     .HasForeignKey(d => d.IdUsuario)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Usuarios_has_Grupo_Usuarios1");
             });
 
@@ -263,7 +279,6 @@ namespace SQL_Judge.BD
                 entity.HasOne(d => d.IdGrupoNavigation)
                     .WithMany(p => p.Tareas)
                     .HasForeignKey(d => d.IdGrupo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Tareas_Grupos1");
             });
 
