@@ -150,6 +150,39 @@ class NavMenu extends Component {
                             </li>
                         </ul>
                     </li>
+                    <li className="nav-item dropdown">
+                        <a
+                            className="nav-link dropdown-toggle"
+                            href="#"
+                            id="navbarDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Problemas
+                        </a>
+                        <ul
+                            className="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="navbarDropdown"
+                        >
+                            <li>
+                                <Link
+                                    className="dropdown-item"
+                                    to="/lista-usuarios"
+                                >
+                                    Ver problemas
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    className="dropdown-item"
+                                    to="/crear-problema"
+                                >
+                                    Crear Problema
+                                </Link>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             );
         }
