@@ -201,3 +201,8 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- begin attached script 'script'
+insert into usuarios values (null, 'Juan', 'Perez', 'Mandujano', 'asdasd@gm.com', 'S18120', SHA2('testPassword', 0), 'mexico', 'guanajuato', 'itsur', 'Admin');
+insert into categorias values(null, 'Join'), (null, 'Order by'), (null, 'Where');
+insert into basesDeDatos values(null, 'world'), (null, 'nwind'), (null, 'sakila');
+-- end attached script 'script'
