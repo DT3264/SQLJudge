@@ -1,4 +1,5 @@
 ﻿using System;
+using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -6,13 +7,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SQL_Judge.BD
 {
-    public partial class sqljudgeContext : DbContext
+    public partial class SQLJudgeContext : DbContext
     {
-        public sqljudgeContext()
+        public SQLJudgeContext()
         {
         }
 
-        public sqljudgeContext(DbContextOptions<sqljudgeContext> options)
+        public SQLJudgeContext(DbContextOptions<SQLJudgeContext> options)
             : base(options)
         {
         }
@@ -171,11 +172,6 @@ namespace SQL_Judge.BD
                 entity.HasIndex(e => e.IdCategoria, "fk_Problemas_Categorias1_idx");
 
                 entity.Property(e => e.IdProblema).HasColumnName("idProblema");
-
-                entity.Property(e => e.BaseDeDatos)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("baseDeDatos");
 
                 entity.Property(e => e.Descripcion)
                     .IsRequired()
