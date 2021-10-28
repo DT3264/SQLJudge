@@ -1,5 +1,4 @@
 import React from "react";
-import './GenerarCodigoRegistro.css';
 import withAuthAdmin from './Auth/withAuthAdmin.js';
 import axios from 'axios';
 
@@ -74,32 +73,58 @@ class GenerarCodigoRegistro extends React.Component {
     render(){
         const mostrarLinks=this.state.links.map((link) => {     
             return(     
-            <tr>
-                <td class="grande">{link.codigo}</td>
-                <td><button class="btn btnR btn-danger" onClick={()=>this.eliminarCodigo(link.idCodigoRegistro)}>Eliminar</button></td>
+            <tr style={{fontSize:"1.1rem"}}>
+                <td style={{
+                    textAlign: "center"
+                }}>{link.codigo}</td>
+                <td style={{
+                    width:"30%"
+                }}><button class="btn btnR btn-danger" onClick={()=>this.eliminarCodigo(link.idCodigoRegistro)}>Eliminar</button></td>
             </tr>
             )
         });
         
         return (
-            <div >
-
-                <div class="tabla">
-                    <table class="table caption-top" id="tablaLinks">
-                    
-                    <thead>
-                        <tr>
-                        <th scope="col" colSpan="2">Codigos disponibles</th>
-                        </tr>   
-                    </thead>
-                    <tbody>
-                        {mostrarLinks}
-                    </tbody>
-                    </table>
-                    <button type="button"  onClick={this.generarCodigo} class="btn btnR btn-success agregar">Agregar codigo</button>
-                </div>
-
-            </div>
+            <div>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        marginTop: "5rem"
+                    }}
+                > 
+                        <table class="table" id="tablaLinks" style={{
+                                width: "50%"
+                        }}>
+                        <thead>
+                            <tr>
+                            <th scope="col" colSpan="2" style={{
+                                paddingLeft:"7rem",
+                                fontSize: "1.3rem"
+                            }} >Codigos disponibles</th>
+                            </tr>   
+                        </thead>
+                        <tbody>
+                            {mostrarLinks}
+                        </tbody>
+                        </table>
+                       
+                     </div>
+                     <div style={{
+                         display:"flex",
+                         alignItems: "center",
+                         justifyContent: "flex-start",
+                         marginLeft: "26rem"
+                     }}>
+                        <button type="button"  onClick={this.generarCodigo}
+                        class="btn btnR btn-success agregar">Agregar codigo</button>
+                     </div>
+                     
+             </div>
+              
+          
         );
     
     }
