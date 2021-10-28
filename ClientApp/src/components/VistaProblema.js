@@ -1,39 +1,57 @@
 import React from "react";
 import withAuthGeneral from "./Auth/withAuthGeneral";
+import axios from 'axios';
 
 class VistaProblema extends React.Component {
+
+    state = {
+        nombre : '',
+        id : 0,
+        categoria : '',
+        baseDatos : '',
+        descripcion : '',
+        resueltos : 0
+    }
+    
+    componentDidMount() {
+        this.getVistaProblema(1);
+    }
+
+    getVistaProblema =  async (id) => {
+        var valueToken = "Bearer " + sessionStorage.getItem("token");
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: valueToken,
+        };
+        const respuesta = await axios.post(
+            "/api/Problemas/vistaProblema",
+            {
+                id : 1
+            },
+            {
+                headers: headers,
+            }
+        );
+        this.setState({ usuarios: respuesta.data });
+        this.setState({ id: respuesta.data.id });
+        this.setState({ nombre: respuesta.data.nombre });
+        this.setState({ categoria: respuesta.data.categoria });
+        this.setState({ baseDatos: respuesta.data.baseDatos });
+        this.setState({ descripcion: respuesta.data.descripcion });
+        this.setState({ resueltos: respuesta.data.resueltos });
+        console.log(respuesta.data);
+    }
+
     render(){
         return(
             <div>
-                <h1 style={{textAlign : "center"}}>TITULO DEL PROBLEMA</h1>
+                <h1 style={{textAlign : "center"}}>{this.state.nombre}</h1>
                 <div>
-                    <p style={{textAlign : "center"}}> id: number categoria: name category base de datos : name data base No. Resueltos : number <br/></p>
+                    <p style={{textAlign : "center"}}> <b>ID:</b>  {this.state.id}   <b>Categoria:</b> {this.state.categoria} <b>Base de datos:</b> {this.state.baseDatos} <b>No. Resueltos:</b> {this.state.resueltos} <br/></p>
                 </div>
                 <button type="button" class="btn btn-primary">Ver envios</button>
-                <div>
-                    <p style={{textAlign : "justify"}}>You are given a string s. You need to find two non-empty strings a and b such that the following conditions are satisfied:
-
-Strings a and b are both subsequences of s.
-For each index i, character si of string s must belong to exactly one of strings a or b.
-String a is lexicographically minimum possible; string b may be any possible string.
-Given string s, print any valid a and b.
-
-Reminder:<br />
-
-A string a (b) is a subsequence of a string s if a (b) can be obtained from s by deletion of several (possibly, zero) elements. For example, 
-"dores", "cf", and "for" are subsequences of "codeforces", while "decor" and "fork" are not.<br />
-
-A string x is lexicographically smaller than a string y if and only if one of the following holds:<br />
-
-x is a prefix of y, but x≠y;
-in the first position where x and y differ, the string x has a letter that appears earlier in the alphabet than the corresponding letter in y.<br />
-Input<br />
-Each test contains multiple test cases. The first line contains the number of test cases t (1≤t≤1000). Description of the test cases follows.
-
-The first and only line of each test case contains one string s (2≤|s|≤100 where |s| means the length of s). String s consists of lowercase Latin letters.
-
-Output
-For each test case, print the strings a and b that satisfy the given conditions. If there are multiple answers, print any.</p>
+                <div  style={{marginTop : "2rem"}}>
+                    <p style={{textAlign : "justify"}}>{this.state.descripcion}</p>
                 </div>
                 <div>
                     <label>Codigo fuente : </label>
@@ -42,7 +60,10 @@ For each test case, print the strings a and b that satisfy the given conditions.
                         style={{ height: "25rem" }}
                     ></textarea>
                 </div>
-                <button type="button" class="btn btn-success">Enviar</button>                
+                <div style={{marginTop : "2rem"}}>
+                    <button type="button" class="btn btn-success">Enviar</button> 
+                </div>
+                               
             </div>
         );
     }
