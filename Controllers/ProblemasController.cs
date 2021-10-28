@@ -7,11 +7,14 @@ using SQL_Judge.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static MoreLinq.Extensions.OrderByExtension;
+using static MoreLinq.Extensions.LeadExtension;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SQL_Judge.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProblemasController : ControllerBase
@@ -141,31 +144,101 @@ namespace SQL_Judge.Controllers
 
             return Ok(problemas);
         }
+
         /// <summary>
-        /// Lista de problemas
+        /// Lista de problemas de la manera [id, nombre, categoria, dificultad, resueltos, resueltoPorUsiario]
         /// </summary>
+        /// /// <remarks>
+        /// La lista de categorías recibe los IDs de las categorías, en caso de que no exista o comience con 0, se devolverán todos los problemas
+        /// orden puede ser "resueltos" o "dificultad".
+        /// ascendente puede ser true o false
+        /// </remarks>
         /// <returns>Una lista de problemas</returns>
         /// <response code="200">La lista de todos los problemas</response>
         [HttpPost("listaProblemas")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(ListProblemasRequest), StatusCodes.Status200OK)]
-        public IActionResult listaProblemas()
+        [ProducesResponseType(typeof(ListProblemasResponse), StatusCodes.Status200OK)]
+        public IActionResult listaProblemas([FromBody] ListaProblemasRequest request)
         {
-            //EJEMPLO DE SALIDA
-            List<ListProblemasRequest> lista = new List<ListProblemasRequest>();
-            ListProblemasRequest res = new ListProblemasRequest(1, "Cuidades de mexico", "Basico", 500, 45, true);
-            ListProblemasRequest res2 = new ListProblemasRequest(2, "Cuidades de mexico", "Join", 400, 9, false);
-            ListProblemasRequest res3 = new ListProblemasRequest(3, "Cuidades", "Agrupaciones", 500, 45, true);
-            lista.Add(res);
-            lista.Add(res2);
-            lista.Add(res3);
-
-            var usuario = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
-            var dbContext = new SQLJudgeContext();
-            //var problemas = dbContext.Problemas.ToList();
-
-            return Ok(lista);
+            var usuario = User.Identity.Name;
+            var problemas = ObtenerListaProblemas(usuario, request);
+            return Ok(problemas);
         }
+
+        /// <summary>
+        /// Igual que listaProblemas pero anónimo
+        /// </summary>
+        /// <returns>Una lista de problemas</returns>
+        /// <response code="200">La lista de todos los problemas</response>
+        [HttpPost("listaProblemasAnonimos")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ListProblemasResponse), StatusCodes.Status200OK)]
+        public IActionResult listaProblemasAnonimos([FromBody] ListaProblemasRequest request)
+        {
+            var problemas = ObtenerListaProblemas(null, request);
+            return Ok(problemas);
+        }
+
+        private object ObtenerListaProblemas(string usuario, ListaProblemasRequest request)
+        {
+            var dbContext = new SQLJudgeContext();
+            var problemasproblemasConIDCategoria = from p in dbContext.Problemas
+                                                   join c in dbContext.Categorias on p.IdCategoria equals c.IdCategoria
+                                                   select new { p.IdProblema, p.Nombre, p.IdCategoria, nombreCategoria = c.Nombre, p.Dificultad };
+
+            // Filtra por categorias
+            if (request.categorias != null && request.categorias[0] != 0)
+            {
+                problemasproblemasConIDCategoria = problemasproblemasConIDCategoria.Where(p => request.categorias.Contains(p.IdCategoria));
+            }
+
+            // Remueve el id de categoria
+            var problemas = from p in problemasproblemasConIDCategoria
+                            select new { p.IdProblema, p.Nombre, p.nombreCategoria, p.Dificultad, noResueltos = obtenResueltosPorProblema(p.IdProblema), resuelto = compruebaMejorResultadoEnProblema(usuario, p.IdProblema) };
+
+
+            // Ordena
+            var problemasOrdenados = (request.ordenaPor, request.ascendente) switch
+            {
+                ("resueltos", true) => problemas.OrderBy(p => p.noResueltos, MoreLinq.OrderByDirection.Ascending),
+                ("resueltos", false) => problemas.OrderBy(p => p.noResueltos, MoreLinq.OrderByDirection.Descending),
+                ("dificultad", true) => problemas.OrderBy(p => p.Dificultad, MoreLinq.OrderByDirection.Ascending),
+                ("dificultad", false) => problemas.OrderBy(p => p.Dificultad, MoreLinq.OrderByDirection.Descending),
+                // Por defecto se ordenan  por resueltos de manera descendente
+                _ => problemas.OrderBy(p => p.noResueltos, MoreLinq.OrderByDirection.Descending),
+            };
+
+            return problemasOrdenados;
+        }
+
+        static private int obtenResueltosPorProblema(int idProblema)
+        {
+            var dbContext = new SQLJudgeContext();
+            var resueltos = from e in dbContext.Envios
+                            where e.IdProblema == idProblema && e.Veredicto == "AC"
+                            group e by e.IdUsuario into u
+                            select u;
+            return resueltos.Count();
+        }
+
+        static private int compruebaMejorResultadoEnProblema(string usuario, int idProblema)
+        {
+            if (usuario == null) return -1;
+
+            var dbContext = new SQLJudgeContext();
+            var resultados = new string[] { "AC", "WA", "RE" };
+            var envios = from p in dbContext.Problemas
+                                      join e in dbContext.Envios on p.IdProblema equals e.IdProblema
+                                      join u in dbContext.Usuarios on e.IdUsuario equals u.IdUsuario
+                                      where p.IdProblema == idProblema && resultados.Contains(e.Veredicto) && u.Usuario1 == usuario
+                                      select new {e.Veredicto};
+            // Hay envios correctos
+            if (envios.Where(e => e.Veredicto == "AC").Count() > 0) return 1;
+            // Si hay envios y no hay correctos, son envios incorrectos
+            else if (envios.Count() > 0) return 0;
+            // Si no hay envios, no se ha intentado
+            else return -1;
+        }
+
         /// <summary>
         /// Vista del problema
         /// </summary>

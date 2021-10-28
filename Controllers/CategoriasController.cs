@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SQL_Judge.BD;
 using SQL_Judge.Responses;
@@ -11,6 +12,7 @@ namespace SQL_Judge.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriasController : ControllerBase
     {
         /// <summary>
@@ -19,6 +21,7 @@ namespace SQL_Judge.Controllers
         /// <returns>Regresa un AuthResponse con el token de sesión, usuario y tipo de usuario</returns>
         /// <response code="200">Regresa las categorías existentes</response>  
         [HttpPost("obtenerCategorias")]
+        [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(List<ObtenerCategoriasResponse>), StatusCodes.Status200OK)]
         public IActionResult ObtenerCategorias()
         {

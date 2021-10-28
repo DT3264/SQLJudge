@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SQL_Judge.Requests
 {
-    public class ListProblemasRequest
+    public class ListProblemasResponse
     {
-        public ListProblemasRequest(int id, string nombre, string categoria, int dif, int noRes, bool res)
+        public ListProblemasResponse(int id, string nombre, string categoria, int dif, int noRes, bool res)
         {
             this.id = id;
             this.nombre = nombre;
@@ -16,11 +17,17 @@ namespace SQL_Judge.Requests
             this.noResueltos = noRes;
             this.resuelto = res;
         }
+        [DefaultValue(1)]
         public int id { get; set; }
+        [DefaultValue("Las montañas más altas")]
         public string nombre { get; set; }
+        [DefaultValue("Join")]
         public string categoria { get; set; }
+        [DefaultValue(500)]
         public int dificultad { get; set; }
+        [DefaultValue(25)]
         public int noResueltos { get; set; }
-        public bool resuelto { get; set; }
+        [DefaultValue(-1)]
+        public int resuelto { get; set; }
     }
 }
