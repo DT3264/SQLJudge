@@ -1,5 +1,7 @@
 import React from "react";
 import Editor from "./Editor";
+import Validaciones from "./Validaciones.js";
+import axios from "axios";
 
 class EditProblemData extends React.Component {
     estadoBase = {
@@ -11,24 +13,69 @@ class EditProblemData extends React.Component {
     state = {
         sql: "",
         formulario: this.estadoBase,
+        formularioErrores: this.estadoBase,
         categorias: [
             {
-                id: 0,
+                idCategoria: 0,
                 nombre: "BASICOS",
             },
             {
-                id: 1,
+                idCategoria: 1,
                 nombre: "JOINS",
             },
             {
-                id: 2,
+                idCategoria: 2,
                 nombre: "SUBCONSULTAS",
             },
         ],
-        basesDatos: ["Nwind", "World", "Sakila"],
+        basesDatos: [
+            {
+                id: 1,
+                nombre: "world",
+            },
+            {
+                id: 2,
+                nombre: "nwind",
+            },
+            {
+                id: 3,
+                nombre: "sakila",
+            },
+        ],
         categoria: 0,
-        baseDatos: "",
+        baseDatos: 1,
         comprobarOrdenFilas: false,
+    };
+
+    componentDidMount() {
+        this.cargarCategorias();
+    }
+
+    cargarCategorias = async () => {
+        const token = sessionStorage.getItem("token");
+        const tmp_token = "Bearer " + token;
+        const respuesta = await axios.post(
+            "/api/Categorias/obtenerCategorias",
+            {},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: tmp_token,
+                },
+            }
+        );
+        this.setState({
+            categorias: respuesta.data,
+        });
+        this.setState({ categoria: this.state.categorias[0].idCategoria });
+    };
+
+    limpiarEstado = () => {
+        this.setState({
+            formulario: this.estadoBase,
+            sql: "",
+            comprobarFilas: false,
+        });
     };
 
     setSQL = (value) => {
@@ -47,11 +94,53 @@ class EditProblemData extends React.Component {
         });
     };
 
+    validar = () => {
+        var esPosible = true;
+        var validaciones = new Validaciones();
+
+        var testTitulo = validaciones.validarTituloProblema(
+            this.state.formulario.titulo
+        );
+        var testDescripcion = validaciones.validarDescripcion(
+            this.state.formulario.descripcion
+        );
+
+        if (!testTitulo[0]) esPosible = false;
+        if (!testDescripcion) esPosible = false;
+
+        this.setState({
+            formularioErrores: {
+                ...this.state.formularioErrores,
+                titulo: testTitulo[1],
+                descripcion: testDescripcion[1],
+            },
+        });
+
+        return esPosible;
+    };
+
+    handleButtonPressed = () => {
+        if (this.validar()) {
+            this.props.onSubmit({
+                titulo: this.state.formulario.titulo,
+                descripcion: this.state.formulario.descripcion,
+                idCategoria: this.state.categoria,
+                base: this.state.baseDatos,
+                dificultad: this.state.formulario.dificultad,
+                codigo: this.state.sql,
+                comprobarFilas: this.state.comprobarOrdenFilas,
+            });
+            this.limpiarEstado();
+        }
+    };
+
     render() {
         const listElems = this.state.categorias.map((categoria) => {
             return (
                 <option
-                    onClick={() => this.setState({ categoria: categoria.id })}
+                    onClick={() =>
+                        this.setState({ categoria: categoria.idCategoria })
+                    }
                 >
                     {categoria.nombre}
                 </option>
@@ -59,8 +148,8 @@ class EditProblemData extends React.Component {
         });
         const listaBases = this.state.basesDatos.map((base) => {
             return (
-                <option onClick={() => this.setState({ baseDatos: base })}>
-                    {base}
+                <option onClick={() => this.setState({ baseDatos: base.id })}>
+                    {base.nombre}
                 </option>
             );
         });
@@ -78,6 +167,9 @@ class EditProblemData extends React.Component {
                             value={this.state.formulario.titulo}
                             onChange={this.handleInputChange}
                         />
+                        <p className="error-validacion">
+                            {this.state.formularioErrores.titulo}
+                        </p>
                     </div>
                     <div className="col-md-6">
                         <label className="form-label">Dificultad</label>
@@ -122,6 +214,9 @@ class EditProblemData extends React.Component {
                             value={this.state.formulario.descripcion}
                             onChange={this.handleInputChange}
                         ></textarea>
+                        <p className="error-validacion">
+                            {this.state.formularioErrores.descripcion}
+                        </p>
                     </div>
                     <div className="col-md-12">
                         <div class="form-check">
@@ -150,6 +245,7 @@ class EditProblemData extends React.Component {
                 <button
                     className="btn btn-success"
                     style={{ marginTop: "1rem" }}
+                    onClick={this.handleButtonPressed}
                 >
                     Guardar Problema
                 </button>

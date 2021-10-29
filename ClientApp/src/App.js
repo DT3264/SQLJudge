@@ -14,6 +14,7 @@ import ListaUsuarios from './components/ListaUsuarios';
 import Problemset from './components/Problemset.js';
 import VistaProblema from './components/VistaProblema.js';
 import CrearProblema from "./components/CrearProblema.js";
+import ListadoProblemas from "./components/ListadoProblemas.js";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -36,6 +37,10 @@ export default class App extends Component {
                     <Route path="/problemset" component={Problemset} />
                     <Route path="/problem" component={VistaProblema} />
                     <Route path="/crear-problema" component={CrearProblema} />
+                    <Route
+                        paht="/lista-problemas"
+                        component={ListadoProblemas}
+                    />
                     <Route path="*" component={PageNotFound} />
                 </Switch>
             </Layout>
