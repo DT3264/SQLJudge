@@ -245,20 +245,43 @@ namespace SQL_Judge.Controllers
         /// <param name="value">ID del problema</param>
         /// <returns></returns>
         /// <response code="200">Se a encontrado el problema a mostrar</response>
+        /// <response code="400">No se a encontrado el problema a mostrar</response>
         [HttpPost("vistaProblema")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(VistaProblemaRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public IActionResult vistaProblema([FromBody] EliminarCodigoRequest value)
-        {
-            VistaProblemaRequest problema = new VistaProblemaRequest();
-            problema.id = 1;
-            problema.nombre = "Cuidades";
-            problema.categoria = "Basicos";
-            problema.baseDatos = "NWIND";
-            problema.resueltos = 45;
-            problema.descripcion = "The manager of Mangojata Lawyes a report on the current lawyers...";
+        {   
+            var usuario = User.Identity.Name;
+            var dbContext = new SQLJudgeContext();
+            var envios = from p in dbContext.Problemas
+                         join e in dbContext.Envios on p.IdProblema equals e.IdProblema
+                         join u in dbContext.Usuarios on e.IdUsuario equals u.IdUsuario
+                         where p.IdProblema == value.id && e.Veredicto == "AC"
+                         select new { e.Veredicto };
 
-            return Ok(problema);
+            var cantEnvios = envios.Count();  
+            var datos = from p in dbContext.Problemas 
+                        join cat in dbContext.Categorias on p.IdCategoria equals cat.IdCategoria
+                        join d in dbContext.Basesdedatos on p.IdBase equals d.IdBase
+                        where p.IdProblema == value.id
+                        select new
+                        {
+                            id = p.IdProblema,
+                            nombre = p.Nombre,
+                            categoria = cat.Nombre,
+                            baseDatos = d.Nombre,
+                            resueltos = cantEnvios,
+                            descripcion = p.Descripcion
+                        };
+            if (datos.Count() > 0)
+            {
+                return Ok(datos.First());
+            }
+            else {
+                return BadRequest("El problema no existe");
+            }
+            
         }
     }
 }
