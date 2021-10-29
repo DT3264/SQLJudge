@@ -8,7 +8,7 @@ namespace SQL_Judge.Requests
 {
     public class ListProblemasResponse
     {
-        public ListProblemasResponse(int id, string nombre, string categoria, int dif, int noRes, bool res)
+        public ListProblemasResponse(int id, string nombre, string categoria, int dif, int noRes, int res)
         {
             this.id = id;
             this.nombre = nombre;
