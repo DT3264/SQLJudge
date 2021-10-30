@@ -228,6 +228,15 @@ class EditProblemData extends React.Component {
                         <label className="form-label">
                             Descripción del problema
                         </label>
+                        <br />
+                        <label className="form-label">
+                            <a
+                                href="https://localhost:5001/redaccion"
+                                target="_blank"
+                            >
+                                Puedes usar nuestro editor online
+                            </a>
+                        </label>
                         <textarea
                             name="descripcion"
                             className="form-control"
