@@ -132,7 +132,7 @@ namespace SQL_Judge.Controllers
         /// <summary>
         /// Obtiene los problemas existentes con todos los datos
         /// </summary>
-        /// <response code="200">El problema se eliminó exitosamente</response>
+        /// <response code="200">La lista de problemas con todos sus detalles</response>
         [HttpPost("obtenerProblemasCompletos")]
         [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(List<ObtenerProblemasResponse>), StatusCodes.Status200OK)]

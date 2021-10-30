@@ -16,8 +16,8 @@ namespace SQL_Judge.Responses
         public string descripcion { get; set; }
         [DefaultValue("select * from motañas order by altura limit 10")]
         public string solucion { get; set; }
-        [DefaultValue("zonas")]
-        public int idBaseDeDatos { get; set; }
+        [DefaultValue(1)]
+        public int idBase { get; set; }
         [DefaultValue(1)]
         public int idCategoria { get; set; }
         [DefaultValue(10)]
