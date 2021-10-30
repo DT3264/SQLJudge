@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import ModalEliminar from "../modals/ModalEliminar";
+import withAuthAdmin from "./Auth/withAuthAdmin";
+import { withRouter } from "react-router";
 
 class ListadoProblemas extends React.Component {
     state = { problemas: [], modalEliminar: false, idProblema: 0, nombre: "" };
@@ -31,6 +33,7 @@ class ListadoProblemas extends React.Component {
                 },
             }
         );
+        console.log(respuesta.data);
         this.setState({ problemas: respuesta.data });
     };
 
@@ -74,7 +77,27 @@ class ListadoProblemas extends React.Component {
                         >
                             Eliminar
                         </button>
-                        <button className="btn btn-warning">Editar</button>
+                        <button
+                            className="btn btn-warning"
+                            onClick={() =>
+                                this.props.history.push(
+                                    "/actualizar-problema",
+                                    {
+                                        problema1: {
+                                            idProblema: problema.idProblema,
+                                            nombre: problema.nombre,
+                                            descripcion: problema.descripcion,
+                                            solucion: problema.solucion,
+                                            idBaseDeDatos: problema.idBase,
+                                            idCategoria: problema.idCategoria,
+                                            dificultad: problema.dificultad,
+                                        },
+                                    }
+                                )
+                            }
+                        >
+                            Editar
+                        </button>
                     </td>
                 </tr>
             );
@@ -106,4 +129,4 @@ class ListadoProblemas extends React.Component {
         );
     }
 }
-export default ListadoProblemas;
+export default withAuthAdmin(withRouter(ListadoProblemas));

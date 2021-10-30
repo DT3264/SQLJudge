@@ -14,20 +14,7 @@ class EditProblemData extends React.Component {
         sql: "",
         formulario: this.estadoBase,
         formularioErrores: this.estadoBase,
-        categorias: [
-            {
-                idCategoria: 0,
-                nombre: "BASICOS",
-            },
-            {
-                idCategoria: 1,
-                nombre: "JOINS",
-            },
-            {
-                idCategoria: 2,
-                nombre: "SUBCONSULTAS",
-            },
-        ],
+        categorias: [],
         basesDatos: [
             {
                 id: 1,
@@ -42,13 +29,28 @@ class EditProblemData extends React.Component {
                 nombre: "sakila",
             },
         ],
-        categoria: 0,
+        categoria: 1,
         baseDatos: 1,
         comprobarOrdenFilas: false,
+        idProblema: -1,
     };
 
     componentDidMount() {
         this.cargarCategorias();
+        if (this.props.problema) {
+            this.setState({
+                formulario: {
+                    ...this.state.formulario,
+                    titulo: this.props.problema.nombre,
+                    dificultad: this.props.problema.dificultad,
+                    descripcion: this.props.problema.descripcion,
+                },
+                categoria: this.props.problema.idCategoria,
+                sql: this.props.problema.solucion,
+                baseDatos: this.props.problema.idBaseDeDatos,
+                idProblema: this.props.problema.idProblema,
+            });
+        }
     }
 
     cargarCategorias = async () => {
@@ -67,7 +69,7 @@ class EditProblemData extends React.Component {
         this.setState({
             categorias: respuesta.data,
         });
-        this.setState({ categoria: this.state.categorias[0].idCategoria });
+        //this.setState({ categoria: this.state.categorias[0].idCategoria });
     };
 
     limpiarEstado = () => {
@@ -120,6 +122,8 @@ class EditProblemData extends React.Component {
     };
 
     handleButtonPressed = () => {
+        console.log(this.state.categoria);
+        console.log(this.state.baseDatos);
         if (this.validar()) {
             this.props.onSubmit({
                 titulo: this.state.formulario.titulo,
@@ -129,6 +133,7 @@ class EditProblemData extends React.Component {
                 dificultad: this.state.formulario.dificultad,
                 codigo: this.state.sql,
                 comprobarFilas: this.state.comprobarOrdenFilas,
+                idProblema: this.state.idProblema,
             });
             this.limpiarEstado();
         }
@@ -136,19 +141,23 @@ class EditProblemData extends React.Component {
 
     render() {
         const listElems = this.state.categorias.map((categoria) => {
+            var isSelected = false;
+            if (categoria.idCategoria === this.state.categoria) {
+                isSelected = true;
+            }
             return (
-                <option
-                    onClick={() =>
-                        this.setState({ categoria: categoria.idCategoria })
-                    }
-                >
+                <option value={categoria.idCategoria} selected={isSelected}>
                     {categoria.nombre}
                 </option>
             );
         });
         const listaBases = this.state.basesDatos.map((base) => {
+            var isSelected = false;
+            if (base.id === this.state.baseDatos) {
+                isSelected = true;
+            }
             return (
-                <option onClick={() => this.setState({ baseDatos: base.id })}>
+                <option value={base.id} selected={isSelected}>
                     {base.nombre}
                 </option>
             );
@@ -185,7 +194,13 @@ class EditProblemData extends React.Component {
                         <label for="inputState" className="form-label">
                             Categoria
                         </label>
-                        <select id="inputState" className="form-select">
+                        <select
+                            id="inputState"
+                            className="form-select"
+                            onChange={(event) =>
+                                this.setState({ categoria: event.target.value })
+                            }
+                        >
                             {listElems}
                         </select>
                     </div>
@@ -193,7 +208,13 @@ class EditProblemData extends React.Component {
                         <label for="inputState" className="form-label">
                             Base de datos de origen
                         </label>
-                        <select id="inputState" className="form-select">
+                        <select
+                            id="inputState"
+                            className="form-select"
+                            onChange={(event) =>
+                                this.setState({ baseDatos: event.target.value })
+                            }
+                        >
                             {listaBases}
                         </select>
                     </div>

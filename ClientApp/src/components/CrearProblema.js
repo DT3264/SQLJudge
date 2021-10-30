@@ -35,4 +35,4 @@ class CrearProblema extends React.Component {
     }
 }
 
-export default withRouter(withAuthAdmin(CrearProblema));
+export default withAuthAdmin(withRouter(CrearProblema));
