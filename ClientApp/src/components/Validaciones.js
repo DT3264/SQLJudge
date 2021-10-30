@@ -97,11 +97,33 @@ class Validaciones {
         }
     }
 
-    validarCodigoRegistro(codigo){
-        if(codigo.length !== 10){
-            return [false,"el codigo debe tener 10 caracteres"];
+    validarCodigoRegistro(codigo) {
+        if (codigo.length !== 10) {
+            return [false, "el codigo debe tener 10 caracteres"];
         }
-        return [true,""];
+        return [true, ""];
+    }
+
+    validarTituloProblema(titulo) {
+        if (titulo.length === 0) {
+            return [false, "el titulo no puede estar vacio"];
+        }
+        if (titulo.length >= 45) {
+            return [false, "el titulo puede tener hasta 45 caracteres"];
+        }
+        return [true, ""];
+    }
+    validarDescripcion(descripcion) {
+        if (descripcion.length === 0) {
+            return [false, "la descripcion no puede estar vacia"];
+        }
+        return [true, ""];
+    }
+    validarSolucion(solucion) {
+        if (solucion.length === 0) {
+            return [false, "la solucion no puede estar vacia"];
+        }
+        return [true, ""];
     }
 }
 

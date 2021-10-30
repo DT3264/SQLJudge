@@ -4,19 +4,24 @@ import axios from 'axios';
 // recibe un arreglo de problemas "problems" como props.
 
 class ListaProblemas extends React.Component {
-    state={problemas:[]};
-   
+    state = { problemas: [] };
 
-    cargarProblemas =  () => {
-        this.setState({ problemas: this.props.problems});
+    cargarProblemas = () => {
+        this.setState({ problemas: this.props.problems });
     };
 
-    componentDidMount() {
-         this.cargarProblemas();
+    componentDidUpdate(prevProps) {
+        if (prevProps.problems !== this.props.problems) {
+            this.cargarProblemas();
+        }
     }
-    render(){
-        const mostrarProblemas=this.state.problemas.map((problema)=>{
-            return(
+
+    componentDidMount() {
+        this.cargarProblemas();
+    }
+    render() {
+        const mostrarProblemas = this.state.problemas.map((problema) => {
+            return (
                 <tr>
                     <td>{problema.id}</td>
                     <td>{problema.nombre}</td>
@@ -24,17 +29,19 @@ class ListaProblemas extends React.Component {
                     <td>{problema.dificultad}</td>
                     <td>{problema.noResueltos}</td>
                 </tr>
-            )
+            );
         });
         return (
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-                marginTop: "5rem"
-            }}>
-               <table class="table table-bordered">
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    marginTop: "5rem",
+                }}
+            >
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -44,9 +51,7 @@ class ListaProblemas extends React.Component {
                             <th>No. Resueltos</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {mostrarProblemas}
-                    </tbody>
+                    <tbody>{mostrarProblemas}</tbody>
                 </table>
             </div>
         );

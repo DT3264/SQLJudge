@@ -168,7 +168,7 @@ class NavMenu extends Component {
                             <li>
                                 <Link
                                     className="dropdown-item"
-                                    to="/lista-usuarios"
+                                    to="/lista-problemas"
                                 >
                                     Ver problemas
                                 </Link>
