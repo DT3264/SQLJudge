@@ -32,7 +32,8 @@ namespace SQL_Judge.Controllers
         ///        "solucion": "select * from motañas order by altura limit 10",
         ///        "idBaseDeDatos": "zonas",
         ///        "idCategoria": 1,
-        ///        "dificultad": 500
+        ///        "dificultad": 500,
+        ///        "comprobarColumnas": 1
         ///     }
         ///
         /// </remarks>
@@ -50,7 +51,8 @@ namespace SQL_Judge.Controllers
                 Solucion = request.solucion,
                 IdBase = request.idBaseDeDatos,
                 IdCategoria = request.idCategoria,
-                Dificultad = request.dificultad
+                Dificultad = request.dificultad,
+                ComprobarColumnas = request.comprobarColumnas
             };
             dbContext.Add(nuevoProblema);
             dbContext.SaveChanges();
@@ -71,7 +73,8 @@ namespace SQL_Judge.Controllers
         ///        "solucion": "select * from motañas order by altura limit 20",
         ///        "idBaseDeDatos": "zonas",
         ///        "idCategoria": 1,
-        ///        "dificultad": 500
+        ///        "dificultad": 500,
+        ///        "comprobarColumnas": 0
         ///     }
         ///
         /// </remarks>
@@ -90,7 +93,8 @@ namespace SQL_Judge.Controllers
                 Solucion = request.solucion,
                 IdBase = request.idBaseDeDatos,
                 IdCategoria = request.idCategoria,
-                Dificultad = request.dificultad
+                Dificultad = request.dificultad,
+                ComprobarColumnas = request.comprobarColumnas
             };
             dbContext.Update(problemaAActualizar);
             dbContext.SaveChanges();

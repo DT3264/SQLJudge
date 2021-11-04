@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`Problemas` (
   `idBase` INT NOT NULL,
   `idCategoria` INT NOT NULL,
   `dificultad` INT NOT NULL,
+  `comprobarColumnas` TINYINT NOT NULL,
   PRIMARY KEY (`idProblema`),
   INDEX `fk_Problemas_Categorias1_idx` (`idCategoria` ASC) VISIBLE,
   INDEX `fk_Problemas_BasesDeDatos1_idx` (`idBase` ASC) VISIBLE,

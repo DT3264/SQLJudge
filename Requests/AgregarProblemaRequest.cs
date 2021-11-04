@@ -20,5 +20,7 @@ namespace SQL_Judge.Requests
         public int idCategoria { get; set; }
         [DefaultValue(10)]
         public int dificultad { get; set; }
+        [DefaultValue(0)]
+        public byte comprobarColumnas { get; set; }
     }
 }
