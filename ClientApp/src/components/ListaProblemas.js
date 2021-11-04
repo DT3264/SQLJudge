@@ -38,7 +38,7 @@ class ListaProblemas extends React.Component {
                     justifyContent: "center",
                     alignItems: "center",
                     flexDirection: "column",
-                    marginTop: "5rem",
+                    marginTop: "3rem",
                 }}
             >
                 <table class="table table-bordered">
