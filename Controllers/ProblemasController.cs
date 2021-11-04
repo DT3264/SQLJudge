@@ -138,13 +138,15 @@ namespace SQL_Judge.Controllers
         /// </summary>
         /// <response code="200">La lista de problemas con todos sus detalles</response>
         [HttpPost("obtenerProblemasCompletos")]
-        [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(List<ObtenerProblemasResponse>), StatusCodes.Status200OK)]
         public IActionResult ObtenerProblemasCompletos()
         {
+            var usuario = User.Identity.Name;
             var dbContext = new SQLJudgeContext();
-            var problemas = from c in dbContext.Problemas
-                            select new { c.IdProblema, c.Nombre, c.Descripcion, c.Solucion,  c.IdBase, c.IdCategoria, c.Dificultad};
+            var problemas = from p in dbContext.Problemas
+                            join c in dbContext.Categorias on p.IdCategoria equals c.IdCategoria
+                            join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
+                            select new { id = p.IdProblema, p.Nombre, categoria = new { c.IdCategoria, c.Nombre }, p.Dificultad, noResueltos = obtenResueltosPorProblema(p.IdProblema), idBase = new { b.IdBase, b.Nombre }, resuelto = compruebaMejorResultadoEnProblema(usuario, p.IdProblema) };
 
             return Ok(problemas);
         }
