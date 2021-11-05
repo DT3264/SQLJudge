@@ -173,6 +173,10 @@ namespace SQL_Judge.BD
 
                 entity.Property(e => e.IdProblema).HasColumnName("idProblema");
 
+                entity.Property(e => e.ComprobarColumnas)
+                    .HasColumnType("tinyint")
+                    .HasColumnName("comprobarColumnas");
+
                 entity.Property(e => e.Descripcion)
                     .IsRequired()
                     .HasColumnName("descripcion");

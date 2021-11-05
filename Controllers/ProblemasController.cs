@@ -32,7 +32,8 @@ namespace SQL_Judge.Controllers
         ///        "solucion": "select * from motañas order by altura limit 10",
         ///        "idBaseDeDatos": "zonas",
         ///        "idCategoria": 1,
-        ///        "dificultad": 500
+        ///        "dificultad": 500,
+        ///        "comprobarColumnas": 1
         ///     }
         ///
         /// </remarks>
@@ -50,7 +51,8 @@ namespace SQL_Judge.Controllers
                 Solucion = request.solucion,
                 IdBase = request.idBaseDeDatos,
                 IdCategoria = request.idCategoria,
-                Dificultad = request.dificultad
+                Dificultad = request.dificultad,
+                ComprobarColumnas = request.comprobarColumnas
             };
             dbContext.Add(nuevoProblema);
             dbContext.SaveChanges();
@@ -71,7 +73,8 @@ namespace SQL_Judge.Controllers
         ///        "solucion": "select * from motañas order by altura limit 20",
         ///        "idBaseDeDatos": "zonas",
         ///        "idCategoria": 1,
-        ///        "dificultad": 500
+        ///        "dificultad": 500,
+        ///        "comprobarColumnas": 0
         ///     }
         ///
         /// </remarks>
@@ -90,7 +93,8 @@ namespace SQL_Judge.Controllers
                 Solucion = request.solucion,
                 IdBase = request.idBaseDeDatos,
                 IdCategoria = request.idCategoria,
-                Dificultad = request.dificultad
+                Dificultad = request.dificultad,
+                ComprobarColumnas = request.comprobarColumnas
             };
             dbContext.Update(problemaAActualizar);
             dbContext.SaveChanges();
@@ -134,13 +138,15 @@ namespace SQL_Judge.Controllers
         /// </summary>
         /// <response code="200">La lista de problemas con todos sus detalles</response>
         [HttpPost("obtenerProblemasCompletos")]
-        [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(List<ObtenerProblemasResponse>), StatusCodes.Status200OK)]
         public IActionResult ObtenerProblemasCompletos()
         {
+            var usuario = User.Identity.Name;
             var dbContext = new SQLJudgeContext();
-            var problemas = from c in dbContext.Problemas
-                            select new { c.IdProblema, c.Nombre, c.Descripcion, c.Solucion,  c.IdBase, c.IdCategoria, c.Dificultad};
+            var problemas = from p in dbContext.Problemas
+                            join c in dbContext.Categorias on p.IdCategoria equals c.IdCategoria
+                            join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
+                            select new { id = p.IdProblema, p.Nombre, categoria = new { c.IdCategoria, c.Nombre }, p.Dificultad, noResueltos = obtenResueltosPorProblema(p.IdProblema), baseDatos = new { b.IdBase, b.Nombre }, resuelto = compruebaMejorResultadoEnProblema(usuario, p.IdProblema) };
 
             return Ok(problemas);
         }

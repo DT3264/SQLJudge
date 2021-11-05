@@ -20,6 +20,7 @@ namespace SQL_Judge.BD
         public int IdBase { get; set; }
         public int IdCategoria { get; set; }
         public int Dificultad { get; set; }
+        public byte ComprobarColumnas { get; set; }
 
         public virtual Basesdedato IdBaseNavigation { get; set; }
         public virtual Categoria IdCategoriaNavigation { get; set; }
