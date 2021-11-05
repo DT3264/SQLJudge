@@ -47,8 +47,34 @@ class ListaProblemas extends React.Component {
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Categoria</th>
-                            <th>Dificultad</th>
-                            <th>No. Resueltos</th>
+                            <th>
+                                <div>
+                                    <a
+                                        href="javascript:void(0);"
+                                        onClick={() =>
+                                            this.props.handleChangeSort(
+                                                "dificultad"
+                                            )
+                                        }
+                                    >
+                                        Dificultad v
+                                    </a>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <a
+                                        href="javascript:void(0);"
+                                        onClick={() =>
+                                            this.props.handleChangeSort(
+                                                "resueltos"
+                                            )
+                                        }
+                                    >
+                                        No. Resueltos v
+                                    </a>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>{mostrarProblemas}</tbody>

@@ -10,13 +10,15 @@ class Problemset extends React.Component {
         categoriasSeleccionadas: [],
         btnCategoria: [],
         selectedOption: -1,
+        ordenarPor: "dificultad",
+        acendente: false,
     };
 
     dicCategorias = {};
 
     componentDidMount() {
-        this.cargarProblemas([0]);
         this.cargarCategorias();
+        this.handleChangeSort("resueltos");
     }
 
     cargarCategorias = async () => {
@@ -40,15 +42,15 @@ class Problemset extends React.Component {
         this.setState({ categorias: respuesta.data });
     };
 
-    cargarProblemas = async (arr_categorias) => {
+    cargarProblemas = async (arr_categorias, ordenarPor, ascendente) => {
         const token = sessionStorage.getItem("token");
         const tmp_token = "Bearer " + token;
         const respuesta = await axios.post(
             "/api/Problemas/listaProblemas",
             {
                 categorias: arr_categorias,
-                ordenaPor: "resueltos",
-                ascendente: false,
+                ordenaPor: ordenarPor,
+                ascendente: ascendente,
             },
             {
                 headers: {
@@ -82,7 +84,11 @@ class Problemset extends React.Component {
             });
         }
 
-        this.cargarProblemas(this.state.categoriasSeleccionadas);
+        this.cargarProblemas(
+            this.state.categoriasSeleccionadas,
+            this.state.ordenarPor,
+            this.state.acendente
+        );
     };
 
     handleRemoveCategoria = (id) => {
@@ -113,10 +119,27 @@ class Problemset extends React.Component {
             btnCategoria: tmp_arr_btn,
         });
 
-        if (tmp_arr.length === 0) {
-            this.cargarProblemas([0]);
+        this.handleLoadProblems(this.state.ordenarPor, this.state.acendente);
+    };
+
+    handleChangeSort = (ordenarPor) => {
+        var ascendente = !this.state.acendente;
+        this.handleLoadProblems(ordenarPor, ascendente);
+        this.setState({
+            acendente: ascendente,
+            ordenarPor: ordenarPor,
+        });
+    };
+
+    handleLoadProblems = (ordenarPor, ascendente) => {
+        if (this.state.categoriasSeleccionadas.length === 0) {
+            this.cargarProblemas([0], ordenarPor, ascendente);
         } else {
-            this.cargarProblemas(this.state.categoriasSeleccionadas);
+            this.cargarProblemas(
+                this.state.categoriasSeleccionadas,
+                ordenarPor,
+                ascendente
+            );
         }
     };
 
@@ -157,7 +180,10 @@ class Problemset extends React.Component {
                     </select>
                 </div>
                 <div style={{ marginTop: "1rem" }}>{buttonsCategorias}</div>
-                <ListaProblemas problems={this.state.problems} />
+                <ListaProblemas
+                    problems={this.state.problems}
+                    handleChangeSort={this.handleChangeSort}
+                />
             </div>
         );
     }
