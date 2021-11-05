@@ -235,6 +235,17 @@ class ListaUsuarios extends React.Component {
                 >
                     <h1> Usuarios Existentes </h1>
                 </div>
+                <div style={{
+                    marginBottom:"1rem"
+                }}>
+                <button
+                    className="btn btn-primary"
+                    onClick={() => this.handleOpenAddUser()}
+                >
+                    Agregar Usuario
+                </button>
+                </div>
+
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
@@ -336,12 +347,7 @@ class ListaUsuarios extends React.Component {
                     deleteUser={this.deleteUser}
                     usuario = {this.state.nombreUsuario}
                 />
-                <button
-                    className="btn btn-primary"
-                    onClick={() => this.handleOpenAddUser()}
-                >
-                    Agregar Usuario
-                </button>
+                
             </div>
         );
     }

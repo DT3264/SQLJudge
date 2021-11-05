@@ -1,5 +1,8 @@
 import React from "react";
 import axios from 'axios';
+import { Link } from "react-router-dom";
+
+
 
 // recibe un arreglo de problemas "problems" como props.
 
@@ -23,9 +26,11 @@ class ListaProblemas extends React.Component {
         const mostrarProblemas = this.state.problemas.map((problema) => {
             return (
                 <tr>
-                    <td>{problema.id}</td>
-                    <td>{problema.nombre}</td>
-                    <td>{problema.categoria}</td>
+                    <td>{problema.idProblema}</td>
+                    <td><Link to={
+                        'https://localhost:5001/problem/'+problema.idProblema
+                    }>{problema.nombre}</Link> </td>
+                    <td>{problema.nombreCategoria}</td>
                     <td>{problema.dificultad}</td>
                     <td>{problema.noResueltos}</td>
                 </tr>
