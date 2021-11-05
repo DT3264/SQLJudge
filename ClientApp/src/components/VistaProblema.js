@@ -1,6 +1,7 @@
 import React from "react";
 import withAuthGeneral from "./Auth/withAuthGeneral";
 import axios from 'axios';
+import { withRouter } from "react-router";
 
 class VistaProblema extends React.Component {
 
@@ -14,32 +15,38 @@ class VistaProblema extends React.Component {
     }
     
     componentDidMount() {
+        //console.log(this.props);
         this.getVistaProblema(1);
     }
 
     getVistaProblema =  async (id) => {
-        var valueToken = "Bearer " + sessionStorage.getItem("token");
-        const headers = {
-            "Content-Type": "application/json",
-            Authorization: valueToken,
-        };
-        const respuesta = await axios.post(
-            "/api/Problemas/vistaProblema",
-            {
-                id : 1
-            },
-            {
-                headers: headers,
-            }
-        );
-        this.setState({ usuarios: respuesta.data });
-        this.setState({ id: respuesta.data.id });
-        this.setState({ nombre: respuesta.data.nombre });
-        this.setState({ categoria: respuesta.data.categoria });
-        this.setState({ baseDatos: respuesta.data.baseDatos });
-        this.setState({ descripcion: respuesta.data.descripcion });
-        this.setState({ resueltos: respuesta.data.resueltos });
-        console.log(respuesta.data);
+        try{
+            var valueToken = "Bearer " + sessionStorage.getItem("token");
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: valueToken,
+            };
+            const respuesta = await axios.post(
+                "/api/Problemas/vistaProblema",
+                {
+                    id : this.props.match.params.id
+                },
+                {
+                    headers: headers,
+                }
+            );
+            this.setState({ usuarios: respuesta.data });
+            this.setState({ id: respuesta.data.id });
+            this.setState({ nombre: respuesta.data.nombre });
+            this.setState({ categoria: respuesta.data.categoria });
+            this.setState({ baseDatos: respuesta.data.baseDatos });
+            this.setState({ descripcion: respuesta.data.descripcion });
+            this.setState({ resueltos: respuesta.data.resueltos });
+        }
+        catch{
+            
+        }
+        //console.log(this.props.match.params);
     }
 
     render(){
@@ -63,10 +70,9 @@ class VistaProblema extends React.Component {
                 <div style={{marginTop : "2rem"}}>
                     <button type="button" class="btn btn-success">Enviar</button> 
                 </div>
-                               
             </div>
         );
     }
 }
 
-export default withAuthGeneral( VistaProblema );
+export default withAuthGeneral( withRouter( VistaProblema ));
