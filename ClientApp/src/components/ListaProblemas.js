@@ -27,9 +27,11 @@ class ListaProblemas extends React.Component {
             return (
                 <tr>
                     <td>{problema.idProblema}</td>
-                    <td><Link to={
-                        'https://localhost:5001/problem/'+problema.idProblema
-                    }>{problema.nombre}</Link> </td>
+                    <td>
+                        <Link to={"/problem/" + problema.idProblema}>
+                            {problema.nombre}
+                        </Link>{" "}
+                    </td>
                     <td>{problema.nombreCategoria}</td>
                     <td>{problema.dificultad}</td>
                     <td>{problema.noResueltos}</td>
