@@ -5,3 +5,9 @@
 .error-validacion {
     color: red;
 }
+
+.header-tabla {
+    text-align: center;
+}
+
+.modal-90w { max-width: 90% !important; }

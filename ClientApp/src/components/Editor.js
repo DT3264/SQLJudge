@@ -6,26 +6,28 @@ import { Controlled as ControlledEditor } from "react-codemirror2";
 
 class Editor extends React.Component {
     handleChange = (editor, data, value) => {
+        editor.refresh();
         this.props.onChange(value);
     };
 
     render() {
         return (
-            <div
-                className="editor-container"
-                style={{ borderBlockColor: "blue", border: "blue" }}
-            >
+            <div>
                 <ControlledEditor
                     onBeforeChange={this.handleChange}
                     value={this.props.value}
                     className="code-mirror-wraper"
-                    options={{
+                    editorDidMount={(editor) => {
+                        editor.refresh();
+                    }}
+                    options={Object.assign({
                         lineWrapping: true,
                         lint: true,
                         mode: "sql",
                         lineNumbers: true,
                         theme: "material",
-                    }}
+                        autofocus: true, 
+                    })}
                 />
             </div>
         );
