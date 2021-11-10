@@ -11,6 +11,7 @@ using static MoreLinq.Extensions.OrderByExtension;
 using static MoreLinq.Extensions.LeadExtension;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using SQL_Judge.Evaluador;
 
 namespace SQL_Judge.Controllers
 {
@@ -226,6 +227,15 @@ namespace SQL_Judge.Controllers
             return resueltos.Count();
         }
 
+        /// <summary>
+        /// Comprueba  el mejor envio de un usuario en  un problema
+        /// </summary>
+        /// <param name="usuario">El usuario en cuestión</param>
+        /// <param name="idProblema">El problema a comprobar los envíos</param>
+        /// <returns>
+        /// -1 si no hay envios en el problema;
+        /// 0 si hay envios pero ninguno es correcto; 
+        /// 1 si hay algun envio correcto</returns>
         static private int compruebaMejorResultadoEnProblema(string usuario, int idProblema)
         {
             if (usuario == null) return -1;
@@ -288,6 +298,45 @@ namespace SQL_Judge.Controllers
                 return BadRequest("El problema no existe");
             }
             
+        }
+
+        /// <summary>
+        /// Evalua un problema
+        /// </summary>
+        /// /// <remarks>
+        ///Ejemplo:
+        ///
+        ///     POST /api/problemas/evaluaProblema
+        ///     {
+        ///        "idProblema": 1,
+        ///        "sqlAEvaluar": "select * from city"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        /// <response code="200">Se ha evaluado el problema</response>
+        /// <response code="400">No se ha evaluado el problema o no existe</response>
+        [HttpPost("evaluaProblema")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(EvaluaProblemaRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public IActionResult evaluaproblema([FromBody] EvaluaProblemaRequest request)
+        {
+            var dbContext = new SQLJudgeContext();
+            var problemas = from p in dbContext.Problemas
+                           join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
+                           where p.IdProblema == request.idProblema
+                           select new { p.Solucion, p.ComprobarColumnas, baseDeDatos=b.Nombre};
+            try
+            {
+                var problema = problemas.First();
+                var respuesta = new Evaluador.Evaluador().Evaluar(request.sqlAEvaluar, problema.Solucion, problema.ComprobarColumnas, problema.baseDeDatos);
+                return Ok(respuesta);
+            }
+            catch
+            {
+                return BadRequest("El problema no existe");
+            }
         }
     }
 }
