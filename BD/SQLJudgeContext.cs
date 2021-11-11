@@ -117,7 +117,7 @@ namespace SQL_Judge.BD
 
                 entity.Property(e => e.Veredicto)
                     .IsRequired()
-                    .HasColumnType("enum('AC','WA','RE')")
+                    .HasColumnType("enum('AC', 'WA', 'RE', 'NC', 'NR', 'RT', 'CD')")
                     .HasColumnName("veredicto");
 
                 entity.HasOne(d => d.IdProblemaNavigation)
