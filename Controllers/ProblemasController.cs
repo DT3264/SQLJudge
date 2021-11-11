@@ -308,8 +308,8 @@ namespace SQL_Judge.Controllers
         ///
         ///     POST /api/problemas/evaluaProblema
         ///     {
-        ///        "idProblema": 1,
-        ///        "sqlAEvaluar": "select * from city"
+        ///        "idProblema": 10,
+        ///        "sqlAEvaluar": "Select * from country order by 1"
         ///     }
         ///
         /// </remarks>
@@ -317,8 +317,7 @@ namespace SQL_Judge.Controllers
         /// <response code="200">Se ha evaluado el problema</response>
         /// <response code="400">No se ha evaluado el problema o no existe</response>
         [HttpPost("evaluaProblema")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(EvaluaProblemaRequest), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EvaluaProblemaResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public IActionResult evaluaproblema([FromBody] EvaluaProblemaRequest request)
         {
@@ -326,11 +325,38 @@ namespace SQL_Judge.Controllers
             var problemas = from p in dbContext.Problemas
                            join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
                            where p.IdProblema == request.idProblema
-                           select new { p.Solucion, p.ComprobarColumnas, baseDeDatos=b.Nombre};
+                           select new { p.IdProblema, p.Solucion, p.ComprobarColumnas, baseDeDatos=b.Nombre};
+
+            // El try se requiere específicamente para la linea problemas.First() en caso de que se envíe la solución de un problema que no exista
             try
             {
                 var problema = problemas.First();
-                var respuesta = new Evaluador.Evaluador().Evaluar(request.sqlAEvaluar, problema.Solucion, problema.ComprobarColumnas, problema.baseDeDatos);
+                // var fechaEvaluacion = DateTime.Now.ToUniversalTime(); // Si es horario en UTC, es este
+                var fechaEvaluacion = DateTime.Now;
+                var respuestaEvaluacion = new Evaluador.Evaluador().Evaluar(request.sqlAEvaluar, problema.Solucion, problema.ComprobarColumnas, problema.baseDeDatos);
+                var usuario = User.Identity.Name;
+                var idUsuario = (from u in dbContext.Usuarios
+                                 where u.Usuario1 == usuario
+                                 select u.IdUsuario).First();
+                var envio = new Envio()
+                {
+                    IdUsuario = idUsuario,
+                    IdProblema = problema.IdProblema,
+                    Fecha = fechaEvaluacion,
+                    Veredicto = respuestaEvaluacion,
+                    Codigo = request.sqlAEvaluar,
+                    Respuesta = ""// TODO: la evaluación debería regresar algún mensaje, tal vez el error en caso de existir
+                };
+                dbContext.Envios.Add(envio);
+                dbContext.SaveChanges();
+
+                var respuesta = new EvaluaProblemaResponse()
+                {
+                    idEnvio = envio.IdEnvio,
+                    estadoEnvio = envio.Veredicto,
+                    codigoFuenteEnvio = envio.Codigo,
+                    fechaYhoraEnvio = envio.Fecha.ToString("dd/MM/yyyy HH:mm")
+                };
                 return Ok(respuesta);
             }
             catch

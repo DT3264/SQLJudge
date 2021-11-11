@@ -8,10 +8,10 @@ namespace SQL_Judge.Requests
 {
     public class EvaluaProblemaRequest
     {
-        [DefaultValue(1)]
+        [DefaultValue(10)]
         public int idProblema { get; set; }
 
-        [DefaultValue("select code, name, region, gnp, headOfState, capital from country where name like 'Z%'")]
+        [DefaultValue("Select * from country order by 1")]
         public string sqlAEvaluar { get; set; }
     }
 }
