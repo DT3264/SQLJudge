@@ -6,7 +6,7 @@ import axios from "axios";
 class EditProblemData extends React.Component {
     estadoBase = {
         titulo: "",
-        dificultad: 0,
+        dificultad: "",
         descripcion: "",
     };
 
@@ -106,15 +106,20 @@ class EditProblemData extends React.Component {
         var testDescripcion = validaciones.validarDescripcion(
             this.state.formulario.descripcion
         );
+        var testDificultad = validaciones.validarDificultad(
+            this.state.formulario.dificultad
+        );
 
         if (!testTitulo[0]) esPosible = false;
         if (!testDescripcion) esPosible = false;
+        if (!testDificultad) esPosible = false;
 
         this.setState({
             formularioErrores: {
                 ...this.state.formularioErrores,
                 titulo: testTitulo[1],
                 descripcion: testDescripcion[1],
+                dificultad: testDificultad[1],
             },
         });
 
@@ -122,8 +127,6 @@ class EditProblemData extends React.Component {
     };
 
     handleButtonPressed = () => {
-        console.log(this.state.categoria);
-        console.log(this.state.baseDatos);
         if (this.validar()) {
             this.props.onSubmit({
                 titulo: this.state.formulario.titulo,
@@ -189,6 +192,9 @@ class EditProblemData extends React.Component {
                             value={this.state.formulario.dificultad}
                             onChange={this.handleInputChange}
                         />
+                        <p className="error-validacion">
+                            {this.state.formularioErrores.dificultad}
+                        </p>
                     </div>
                     <div className="col-md-6">
                         <label for="inputState" className="form-label">
