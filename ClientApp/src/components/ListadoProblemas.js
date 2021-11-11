@@ -61,9 +61,9 @@ class ListadoProblemas extends React.Component {
         const filasProblemas = this.state.problemas.map((problema) => {
             return (
                 <tr>
-                    <th>{problema.idProblema}</th>
+                    <th>{problema.id}</th>
                     <td>{problema.nombre}</td>
-                    <td>{problema.idCategoria}</td>
+                    <td>{problema.categoria.idCategoria}</td>
                     <td>{problema.dificultad}</td>
                     <td>
                         <button

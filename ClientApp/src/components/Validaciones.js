@@ -125,6 +125,12 @@ class Validaciones {
         }
         return [true, ""];
     }
+    validarDificultad(dificultad) {
+        if (dificultad < 500 || dificultad > 3000) {
+            return [false, "La dificultad va de 500 a 3000"];
+        }
+        return [true, ""];
+    }
 }
 
 export default Validaciones;

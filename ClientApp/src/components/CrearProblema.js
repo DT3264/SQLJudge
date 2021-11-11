@@ -10,6 +10,13 @@ class CrearProblema extends React.Component {
 
         const token = sessionStorage.getItem("token");
         const tmp_token = "Bearer " + token;
+
+        var comprobar = 0;
+        if (problema.comprobarFilas === true) {
+            comprobar = 1;
+        }
+        console.log(comprobar);
+
         await axios.post(
             "/api/problemas/agregarProblema",
             {
@@ -19,6 +26,7 @@ class CrearProblema extends React.Component {
                 idBaseDeDatos: problema.base,
                 idCategoria: problema.idCategoria,
                 dificultad: problema.dificultad,
+                comprobarColumnas: comprobar,
             },
             {
                 headers: {
