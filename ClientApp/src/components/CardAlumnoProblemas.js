@@ -21,9 +21,7 @@ class CardAlumnoProblemas extends React.Component {
                                     {this.props.aceptados}
                                 </div>
                                 <div class="col-sm">
-                                    <b style={{ color: "red" }}>
-                                        Respuestas Incorrectas:
-                                    </b>{" "}
+                                    <b style={{ color: "red" }}>Incorrectas:</b>{" "}
                                     {this.props.incorrectos}
                                 </div>
                                 <div class="col-sm">
