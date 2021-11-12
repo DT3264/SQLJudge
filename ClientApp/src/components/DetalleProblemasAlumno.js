@@ -2,40 +2,55 @@ import React from "react";
 import ModalCodigoFuente from "../modals/ModalCodigoFuente";
 import withAuthAdmin from "./Auth/withAuthAdmin";
 import CardAlumnoProblemas from "./CardAlumnoProblemas";
-import Editor from "../components/Editor";
+import axios from "axios";
+import { withRouter } from "react-router";
 
 class DetalleProblemasAlumno extends React.Component {
     state = {
-        nombreAlumno: "Luis Andres Gutierrez Calderon",
-        usuario: "AndrosGreen",
-        envios: 40,
-        aceptados: 33,
-        incorrectos: 20,
-        error: 15,
-        problemasResueltos: [
-            {
-                id: 2,
-                nombre: "Ciudades de Mexico",
-                fechaHoraEnvio: "10/11/2021 18:07:45",
-                codigoFuente: "SELECT * FROM CITY;",
-            },
-            {
-                id: 34,
-                nombre: "Ordenes de Amazon",
-                fechaHoraEnvio: "05/12/2021 20:07:45",
-                codigoFuente: "SELECT * FROM Amazon;",
-            },
-            {
-                id: 1,
-                nombre: "Municipios de Yuriria",
-                fechaHoraEnvio: "04/08/2019 18:07:45",
-                codigoFuente: "SELECT * FROM country;",
-            },
-        ],
+        nombreAlumno: "",
+        usuario: "",
+        envios: 0,
+        aceptados: 0,
+        incorrectos: 0,
+        error: 0,
+        problemasResueltos: [],
         modalShow: false,
         sql: "select * from datos",
         nombreProblema: "",
         idProblema: 0,
+    };
+
+    componentDidMount() {
+        this.obtenerDatos();
+    }
+
+    obtenerDatos = async () => {
+        var id = this.props.match.params.id;
+        var valueToken = "Bearer " + sessionStorage.getItem("token");
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: valueToken,
+        };
+        const respuesta = await axios.post(
+            "/api/Envios/detalleProblemasAlumno",
+            {
+                id: id,
+            },
+            {
+                headers: headers,
+            }
+        );
+
+        var datos = respuesta.data;
+        this.setState({
+            nombreAlumno: datos.nombreAlumno,
+            usuario: datos.usuario,
+            envios: datos.envios,
+            aceptados: datos.aceptados,
+            incorrectos: datos.incorrectos,
+            error: datos.error,
+            problemasResueltos: datos.problemasResueltos,
+        });
     };
 
     handleOpenModal = (nombre, id, sql) => {
@@ -116,4 +131,4 @@ class DetalleProblemasAlumno extends React.Component {
     }
 }
 
-export default withAuthAdmin(DetalleProblemasAlumno);
+export default withAuthAdmin(withRouter(DetalleProblemasAlumno));
