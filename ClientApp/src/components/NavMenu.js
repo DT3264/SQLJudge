@@ -108,7 +108,7 @@ class NavMenu extends Component {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/notFound">
+                        <Link className="nav-link" to="/generar-reporte">
                             Scoreboard
                         </Link>
                     </li>

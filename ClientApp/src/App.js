@@ -19,6 +19,8 @@ import ListadoProblemas from "./components/ListadoProblemas.js";
 import ActualizarProblema from "./components/ActualizarProblema.js";
 import Redaccion from "./components/Redaccion.js";
 import DetalleProblemasAlumno from "./components/DetalleProblemasAlumno.js";
+import GenerarScoreboard from "./components/GenerarScoreboard.js";
+import Scoreboard from "./components/Scoreboard.js";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -54,6 +56,11 @@ export default class App extends Component {
                         path="/envios/alumno/:id"
                         component={DetalleProblemasAlumno}
                     />
+                    <Route
+                        path="/generar-reporte"
+                        component={GenerarScoreboard}
+                    />
+                    <Route path="/scoreboard" component={Scoreboard} />
                     <Route path="*" component={PageNotFound} />
                 </Switch>
             </Layout>
