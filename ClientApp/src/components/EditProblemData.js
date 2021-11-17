@@ -111,8 +111,8 @@ class EditProblemData extends React.Component {
         );
 
         if (!testTitulo[0]) esPosible = false;
-        if (!testDescripcion) esPosible = false;
-        if (!testDificultad) esPosible = false;
+        if (!testDescripcion[0]) esPosible = false;
+        if (!testDificultad[0]) esPosible = false;
 
         this.setState({
             formularioErrores: {
@@ -122,7 +122,7 @@ class EditProblemData extends React.Component {
                 dificultad: testDificultad[1],
             },
         });
-
+        
         return esPosible;
     };
 
