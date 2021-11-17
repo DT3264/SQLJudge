@@ -21,6 +21,7 @@ import Redaccion from "./components/Redaccion.js";
 import DetalleProblemasAlumno from "./components/DetalleProblemasAlumno.js";
 import GenerarScoreboard from "./components/GenerarScoreboard.js";
 import Scoreboard from "./components/Scoreboard.js";
+import ListaAlumnos from "./components/ListaAlumnos.js";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -40,6 +41,7 @@ export default class App extends Component {
                     <Route path="/login" component={Login} />
                     <Route path="/registro" component={Registro} />
                     <Route path="/lista-usuarios" component={ListaUsuarios} />
+                    <Route path="/lista-alumnos" component={ListaAlumnos} />
                     <Route path="/problemset" component={Problemset} />
                     <Route path="/problem/:id" component={VistaProblema} />
                     <Route path="/crear-problema" component={CrearProblema} />

@@ -140,6 +140,14 @@ class NavMenu extends Component {
                                     Ver Usuarios
                                 </Link>
                             </li>
+                            <li>
+                                <Link
+                                    className="dropdown-item"
+                                    to="/lista-alumnos"
+                                >
+                                    Ver alumnos
+                                </Link>
+                            </li>
                         </ul>
                     </li>
                     <li className="nav-item dropdown">
