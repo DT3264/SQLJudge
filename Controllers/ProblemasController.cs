@@ -345,8 +345,22 @@ namespace SQL_Judge.Controllers
                     Fecha = fechaEvaluacion,
                     Veredicto = respuestaEvaluacion,
                     Codigo = request.sqlAEvaluar,
-                    Respuesta = ""// TODO: la evaluación debería regresar algún mensaje, tal vez el error en caso de existir
+                    Respuesta = ""
                 };
+                if(envio.Codigo == "CD") {
+                    envio.Codigo = "WA";
+                    envio.Respuesta = "Columnas duplicadas";
+                }
+                if (envio.Codigo == "NR")
+                {
+                    envio.Codigo = "WA";
+                    envio.Respuesta = "Número de renglones incorrectos";
+                }
+                if (envio.Codigo == "NC")
+                {
+                    envio.Codigo = "WA";
+                    envio.Respuesta = "Número de columnas incorrectas";
+                }
                 dbContext.Envios.Add(envio);
                 dbContext.SaveChanges();
 
