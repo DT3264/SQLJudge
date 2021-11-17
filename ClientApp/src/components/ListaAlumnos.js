@@ -14,11 +14,11 @@ class ListaAlumnos extends React.Component {
         idUsuario: 0,
         apellidoP: "",
         apellidoM: "",
-        usuarios: [],
+        alumnos: [],
         showDeleteUser: false,
         showEditUser: false,
         showAddUser : false,
-
+        problemasResueltos : 0,
         nombreUsuario: "",
         nombre: "",
         apellidoPaterno: "",
@@ -34,7 +34,7 @@ class ListaAlumnos extends React.Component {
     };
 
     componentDidMount() {
-        this.loadUsers();
+        this.loadAlumnos();
     }
 
     mostrarAlerta = (nombre) => {
@@ -45,34 +45,34 @@ class ListaAlumnos extends React.Component {
         this.state.modalShow = true;
     };
 
-    loadUsers = async () => {
+    loadAlumnos = async () => {
         var valueToken = "Bearer " + sessionStorage.getItem("token");
         const headers = {
             "Content-Type": "application/json",
             Authorization: valueToken,
         };
         const respuesta = await axios.post(
-            "/api/Usuario/obtenerUsuarios",
+            "/api/Envios/listaAlumnosEnvio",
             {},
             {
                 headers: headers,
             }
         );
-        this.setState({ usuarios: respuesta.data });
-        this.setState({ idUsuario: respuesta.data.idUsuario });
+        this.setState({ alumnos: respuesta.data });
         console.log(respuesta.data);
+        console.log("hola");
     };
 
 
     render() {
-        const ListaAMostrar = this.state.usuarios.map((usuario) => {
+        const ListaAMostrar = this.state.alumnos.map((alumno) => {
             return (
                 <tr>
-                    <td>{usuario.usuario}</td>
+                    <td>{alumno.usuario}</td>
                     <td>
-                        {usuario.nombre} {usuario.apellidoP} {usuario.apellidoM}
+                        {alumno.nombre}
                     </td>
-                    <td>{usuario.tipo}</td>
+                    <td>{alumno.problemasResueltos}</td>
                     <td>
                         
                         <button
@@ -112,7 +112,7 @@ class ListaAlumnos extends React.Component {
                                     <tr>
                                         <th scope="col">Usuario</th>
                                         <th scope="col">Nombre</th>
-                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Problemas Resueltos</th>
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
@@ -122,89 +122,7 @@ class ListaAlumnos extends React.Component {
                     </div>
                 </div>
 
-                <EditUserData
-                    title="Agregar Usuario"
-                    closeModal={this.handleCloseAddUser}
-                    show={this.state.showAddUser}
-                    msgButton="Agregar"
-                    pressedButton={this.addUser}
-                    errorNombre={this.state.errorNombreUsuario}
-                    formularioInput={{
-                        id: false,
-                        nombreUsuario: false,
-                        nombre: false,
-                        apellidoPaterno: false,
-                        apellidoMaterno: false,
-                        correo: false,
-                        pais: false,
-                        estado: false,
-                        escuela: false,
-                        password: false,
-                        verifyPassword: false,
-                        codigoRegistro: false,
-                    }}
-                    formulario={{
-                        id: "",
-                        nombreUsuario: "",
-                        nombre: "",
-                        apellidoPaterno: "",
-                        apellidoMaterno: "",
-                        correo: "",
-                        pais: "",
-                        estado: "",
-                        escuela: "",
-                        password: "",
-                        verifyPassword: "",
-                        codigoRegistro: "",
-                    }}
-                />
-
-                <EditUserData
-                    title="Editar Usuario"
-                    closeModal={this.handleCloseEditUser}
-                    show={this.state.showEditUser}
-                    msgButton="Actualizar"
-                    pressedButton={this.editUser}
-                    errorNombre=""
-                    formularioInput={{
-                        id: false,
-                        nombreUsuario: true,
-                        nombre: false,
-                        apellidoPaterno: false,
-                        apellidoMaterno: false,
-                        correo: false,
-                        pais: false,
-                        estado: false,
-                        escuela: false,
-                        password: false,
-                        verifyPassword: false,
-                        codigoRegistro: true,
-                    }}
-                    formulario={{
-                        id: this.state.idUsuario,
-                        nombreUsuario: this.state.nombreUsuario,
-                        nombre: this.state.nombre,
-                        apellidoPaterno: this.state.apellidoPaterno,
-                        apellidoMaterno: this.state.apellidoMaterno,
-                        correo: this.state.correo,
-                        pais: this.state.pais,
-                        estado: this.state.estado,
-                        escuela: this.state.escuela,
-                        password: this.state.password,
-                        verifyPassword: this.state.verifyPassword,
-                        codigoRegistro: this.state.codigoRegistro,
-                    }}
-                />
-
-                <ModalDeleteUser
-                    show={this.state.showDeleteUser}
-                    handleClose={this.handleCloseDeleteUser}
-                    handleOpen={this.handleOpenDeleteUser}
-                    nombre={this.state.nombre}
-                    id={this.state.idUsuario}
-                    deleteUser={this.deleteUser}
-                    usuario={this.state.nombreUsuario}
-                />
+                
             </div>
         );
     }
