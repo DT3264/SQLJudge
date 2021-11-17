@@ -11,6 +11,7 @@ class ListaProblemas extends React.Component {
 
     cargarProblemas = () => {
         this.setState({ problemas: this.props.problems });
+        
     };
 
     componentDidUpdate(prevProps) {
@@ -21,9 +22,44 @@ class ListaProblemas extends React.Component {
 
     componentDidMount() {
         this.cargarProblemas();
+        
     }
     render() {
         const mostrarProblemas = this.state.problemas.map((problema) => {
+            console.log(this.state.problemas);
+           if(problema.resuelto==1){
+            return (
+                <tr style={{
+                    backgroundColor: "rgb(223, 241, 229)"
+                }}>
+                    <td>{problema.idProblema}</td>
+                    <td>
+                        <Link to={"/problem/" + problema.idProblema}>
+                            {problema.nombre}
+                        </Link>{" "}
+                    </td>
+                    <td>{problema.nombreCategoria}</td>
+                    <td>{problema.dificultad}</td>
+                    <td>{problema.noResueltos}</td>
+                </tr>
+            );
+           }else if(problema.resuelto==0){
+                return (
+                    <tr style={{
+                        backgroundColor: "rgb(255, 196, 196)"
+                    }}>
+                        <td>{problema.idProblema}</td>
+                        <td>
+                            <Link to={"/problem/" + problema.idProblema}>
+                                {problema.nombre}
+                            </Link>{" "}
+                        </td>
+                        <td>{problema.nombreCategoria}</td>
+                        <td>{problema.dificultad}</td>
+                        <td>{problema.noResueltos}</td>
+                    </tr>
+                );
+           }else{
             return (
                 <tr>
                     <td>{problema.idProblema}</td>
@@ -37,6 +73,7 @@ class ListaProblemas extends React.Component {
                     <td>{problema.noResueltos}</td>
                 </tr>
             );
+           }
         });
         return (
             <div
@@ -48,7 +85,7 @@ class ListaProblemas extends React.Component {
                     marginTop: "3rem",
                 }}
             >
-                <table class="table table-bordered">
+                <table class="table table-bordered" >
                     <thead>
                         <tr>
                             <th>ID</th>
