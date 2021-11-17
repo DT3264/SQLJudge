@@ -141,10 +141,10 @@ namespace SQL_Judge.Controllers
                 usuario = usuarioDB.FirstOrDefault(u => u.Usuario1 == value.usuario);
                 if (usuario == null)
                 {
-                    Codigosregistro grup;
-                    var codigo = context.Codigosregistros.ToList();
-                    grup = codigo.FirstOrDefault(u => u.Codigo == value.codigo);
-                    if (grup != null)
+                    var codigoDeRegistro = (from c in context.Codigosregistros
+                                           where c.Codigo == value.codigo
+                                           select new { c.IdCodigoRegistro, c.Codigo}).FirstOrDefault();
+                    if (codigoDeRegistro != default)
                     {
                         context.Add(new Usuario()
                         {
@@ -164,7 +164,7 @@ namespace SQL_Judge.Controllers
                     }
                     else
                     {
-                        return BadRequest("El grupo no existe");
+                        return BadRequest("El código de registro no existe");
                     }
                 }
                 else
