@@ -364,5 +364,103 @@ namespace SQL_Judge.Controllers
                 return BadRequest("El problema no existe");
             }
         }
+
+        /// <summary>
+        /// Lista de problemas de la manera [id, nombre, categoria, dificultad, noResueltos]
+        /// </summary>
+        /// /// <remarks>
+        ///Ejemplo:
+        ///
+        ///     POST /api/problemas/listaProblemasPorID
+        ///     {
+        ///        ids: [1, 2, 3]
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>Una lista de problemas</returns>
+        /// <response code="200">La lista de todos los problemas</response>
+        [HttpPost("listaProblemasPorID")]
+        [ProducesResponseType(typeof(ListaProblemasPorIDResponse), StatusCodes.Status200OK)]
+        public IActionResult listaProblemasPorID([FromBody] ListaProblemasPorIDRequest request)
+        {
+            var dbContext = new SQLJudgeContext();
+            var problemas = from p in dbContext.Problemas
+                            join c in dbContext.Categorias on p.IdCategoria equals c.IdCategoria
+                            where request.ids.Contains(p.IdProblema)
+                            select new { p.IdProblema, p.Nombre, categoria = c.Nombre, p.Dificultad, noResueltos = obtenResueltosPorProblema(p.IdProblema) };
+            var idsNoExistentes = new List<int>();
+            foreach(var id in request.ids)
+            {   
+                if (problemas.FirstOrDefault(p => p.IdProblema == id) == default)
+                {
+                    idsNoExistentes.Add(id);
+                }
+            }
+            var respuesta = new
+            {
+                problemas = problemas,
+                idsNoExistentes = idsNoExistentes
+            };
+            return Ok(respuesta);
+        }
+
+        /// <summary>
+        /// Lista las respuestas de los envios especificados
+        /// </summary>
+        /// /// <remarks>
+        ///Ejemplo:
+        ///
+        ///     POST /api/problemas/listaResutladosDeProblemas
+        ///     {
+        ///        ids: [1, 2, 3]
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>Una lista de respuestas en los probkemas especificados</returns>
+        /// <response code="200">La lista de todos los problemas</response>
+        [HttpPost("listaResutladosDeProblemas")]
+        [ProducesResponseType(typeof(ListaResuldatosDeProblemasResponse), StatusCodes.Status200OK)]
+        public IActionResult listaResutladosDeProblemas([FromBody] ListaProblemasPorIDRequest request)
+        {
+            var dbContext = new SQLJudgeContext();
+            var usuarios = (from u in dbContext.Usuarios
+                           select new { idUsuario = u.IdUsuario, usuario = u.Usuario1, u.Nombre, u.ApellidoP, u.ApellidoM }).ToList();
+
+            List<object> resultados = new List<object>();
+            foreach(var usuario in usuarios)
+            {
+                List<string> veredictosUsuario = new List<string>();
+                foreach (var idProblema in request.ids)
+                {
+                    var veredictosQuery = from e in dbContext.Envios
+                                     where e.IdProblema == idProblema && e.IdUsuario == usuario.idUsuario
+                                     select e.Veredicto;
+                    veredictosUsuario.Add(obtenerMejorVeredicto(veredictosQuery));
+                }
+                resultados.Add(new
+                {
+                    usuario = usuario.usuario,
+                    nommbreCompleto = string.Format("{0} {1} {2}", usuario.Nombre, usuario.ApellidoP, usuario.ApellidoM),
+                    veredictos = veredictosUsuario
+                }); ;
+            }
+            return Ok(resultados);
+        }
+
+        /// <summary>
+        /// Comprueba  el mejor envio
+        /// </summary>
+        /// <param name="veredictosQuery">Los veredictos obtenidos</param>
+        /// <returns>
+        /// El mejor veredicto en el orden AC > WA > RE > "" (No hay envio)</returns>
+        private string obtenerMejorVeredicto(IQueryable<string> veredictosQuery)
+        {
+            if (veredictosQuery.Contains("AC")) return "AC";
+            if (veredictosQuery.Contains("WA")) return "WA";
+            if (veredictosQuery.Contains("RE")) return "RE";
+            // Si no hay ningun envío
+            return "";
+        }
+
     }
 }
