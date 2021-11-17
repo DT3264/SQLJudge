@@ -176,5 +176,28 @@ namespace SQL_Judge.Controllers
 
             return Ok(res);
         }
+        /// <summary>
+        /// Lista de alumnos con nombre, usuario y problemas resueltos
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">Lista de los alumnos</response>
+        [HttpPost("listaAlumnosEnvio")]
+        [Authorize(Policy = "Admins")]
+        [ProducesResponseType(typeof(ListaAlumnosEnvioResponses), StatusCodes.Status200OK)]
+        public IActionResult listaAlumnosEnvio()
+        {
+            List<ListaAlumnosEnvioResponses> list = new List<ListaAlumnosEnvioResponses>();
+            ListaAlumnosEnvioResponses ans = new ListaAlumnosEnvioResponses();
+            ans.nombre = "Jocelyn Alexia Martinez";
+            ans.usuario = "alexia_oficial";
+            ans.problemasResueltos = 123;
+
+            list.Add(ans);
+            ans.nombre = "Daniel Cerna Torres";
+            ans.usuario = "DT3264";
+            list.Add(ans);
+
+            return Ok(list);
+        }
     }
 }
