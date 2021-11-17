@@ -59,6 +59,7 @@ class ListadoProblemas extends React.Component {
 
     render() {
         const filasProblemas = this.state.problemas.map((problema) => {
+            console.log(problema);
             return (
                 <tr>
                     <th>{problema.id}</th>
@@ -84,12 +85,14 @@ class ListadoProblemas extends React.Component {
                                     "/actualizar-problema",
                                     {
                                         problema1: {
-                                            idProblema: problema.idProblema,
+                                            idProblema: problema.id,
                                             nombre: problema.nombre,
                                             descripcion: problema.descripcion,
                                             solucion: problema.solucion,
-                                            idBaseDeDatos: problema.idBase,
-                                            idCategoria: problema.idCategoria,
+                                            idBaseDeDatos:
+                                                problema.baseDatos.idBase,
+                                            idCategoria:
+                                                problema.categoria.idCategoria,
                                             dificultad: problema.dificultad,
                                         },
                                     }

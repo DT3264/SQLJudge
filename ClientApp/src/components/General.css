@@ -11,3 +11,22 @@
 }
 
 .modal-90w { max-width: 90% !important; }
+
+.centrado {
+    text-align: center;
+}
+
+.top-3 { margin-top: 3rem ;}
+.top-1 { margin-top: 1rem ;}
+
+.accepted {
+    background-color: rgb(129, 214, 129) !important;
+}
+
+.wrong-answer {
+    background-color: rgb(224, 77, 77) !important;
+}
+
+.error {
+    background-color: orange !important;
+}
