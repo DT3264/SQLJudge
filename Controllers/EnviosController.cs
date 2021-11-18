@@ -192,7 +192,7 @@ namespace SQL_Judge.Controllers
                 return BadRequest("El alumno no existe");
             }
             else {
-                return Ok(response);
+                return Ok(response.First());
             }
         }
         /// <summary>
