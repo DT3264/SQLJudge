@@ -1,22 +1,24 @@
 import React from "react";
+import { withRouter } from "react-router";
+import withAuthAdmin from "./Auth/withAuthAdmin";
 
 class Scoreboard extends React.Component {
     state = {
         problemas: [
             {
-                id: 1,
+                idProblema: 1,
                 nombre: "Ciudades de Mexico",
             },
             {
-                id: 33,
+                idProblema: 33,
                 nombre: "Pedidos de Amazon",
             },
             {
-                id: 5,
+                idProblema: 5,
                 nombre: "Ordenes de Walmart",
             },
             {
-                id: 7,
+                idProblema: 7,
                 nombre: "Estados de Japon",
             },
         ],
@@ -40,6 +42,11 @@ class Scoreboard extends React.Component {
     };
 
     componentDidMount() {
+        this.setState({
+            resultados: this.props.location.state.resultados,
+            problemas: this.props.location.state.problemas,
+        });
+        console.log(this.props.location.state.resultados);
         this.getHeaders();
     }
 
@@ -69,7 +76,9 @@ class Scoreboard extends React.Component {
 
             return (
                 <tr>
-                    <th>{user.nombreCompleto}</th>
+                    <th>
+                        {user.nombreCompleto}({user.usuario})
+                    </th>
                     {resultadosProblemas}
                 </tr>
             );
@@ -79,7 +88,7 @@ class Scoreboard extends React.Component {
         const tableRowsProblems = this.state.problemas.map((problem) => {
             return (
                 <tr>
-                    <td className="centrado">{problem.id}</td>
+                    <td className="centrado">{problem.idProblema}</td>
                     <td>
                         <b>{problem.nombre}</b>
                     </td>
@@ -161,4 +170,4 @@ class Scoreboard extends React.Component {
     }
 }
 
-export default Scoreboard;
+export default withAuthAdmin(withRouter(Scoreboard));
