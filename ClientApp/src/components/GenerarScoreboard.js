@@ -1,44 +1,18 @@
+import axios from "axios";
 import React from "react";
+import { withRouter } from "react-router";
+import withAuthAdmin from "./Auth/withAuthAdmin";
 
 class GenerarScoreboard extends React.Component {
     state = {
-        problemas: [
-            {
-                id: 1,
-                nombre: "Ordenes de Walmart",
-                categoria: "JOIN",
-                dificultad: 1200,
-                noResueltos: 34,
-            },
-            {
-                id: 2,
-                nombre: "Municipios de Mexico",
-                categoria: "SUBCONSULTAS",
-                dificultad: 1200,
-                noResueltos: 34,
-            },
-            {
-                id: 4,
-                nombre: "Ciudades de Mexico",
-                categoria: "BASICO",
-                dificultad: 900,
-                noResueltos: 6,
-            },
-            {
-                id: 33,
-                nombre: "Pedidos de Amazon",
-                categoria: "JOIN",
-                dificultad: 800,
-                noResueltos: 13,
-            },
-        ],
+        problemas: [],
         ids: "",
     };
 
     // eliminar problema
     eliminarProblema = (id) => {
         const filtrado = this.state.problemas.filter((problema) => {
-            return problema.id != id;
+            return problema.idProblema != id;
         });
         this.setState({ problemas: filtrado });
         console.log(filtrado);
@@ -48,28 +22,65 @@ class GenerarScoreboard extends React.Component {
     agregarProblemas = async () => {
         var arrIDs = this.state.ids.split(",");
         this.setState({ ids: "" });
-        for (var i = 0; i < arrIDs.length; i++) {
-            this.agregarProblemaLista(i);
+
+        const token = sessionStorage.getItem("token");
+        const tmp_token = "Bearer " + token;
+        const respuesta = await axios.post(
+            "/api/problemas/listaProblemasPorID",
+            {
+                ids: arrIDs,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: tmp_token,
+                },
+            }
+        );
+        var arrProblemas = respuesta.data.problemas;
+        for (var i = 0; i < arrProblemas.length; i++) {
+            this.agregarProblemaLista(arrProblemas[i]);
         }
     };
 
-    agregarProblemaLista = (id) => {
+    agregarProblemaLista = (problema) => {
         var tmpArr = this.state.problemas;
-        tmpArr.push({
-            id: 33,
-            nombre: "Pedidos de Amazon",
-            categoria: "JOIN",
-            dificultad: 800,
-            noResueltos: 13,
-        });
+        tmpArr.push(problema);
         this.setState({ problemas: tmpArr });
+    };
+
+    generarReporte = async () => {
+        const token = sessionStorage.getItem("token");
+        const tmp_token = "Bearer " + token;
+
+        const tmpIDs = this.state.problemas.map(
+            (problema) => problema.idProblema
+        );
+
+        const respuesta = await axios.post(
+            "/api/Problemas/listaResutladosDeProblemas",
+            {
+                ids: tmpIDs,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: tmp_token,
+                },
+            }
+        );
+
+        this.props.history.push("/scoreboard", {
+            resultados: respuesta.data,
+            problemas: this.state.problemas,
+        });
     };
 
     render() {
         const filasProblemas = this.state.problemas.map((problema) => {
             return (
                 <tr>
-                    <td>{problema.id}</td>
+                    <td>{problema.idProblema}</td>
                     <td>{problema.nombre}</td>
                     <td>{problema.categoria}</td>
                     <td>{problema.dificultad}</td>
@@ -77,7 +88,9 @@ class GenerarScoreboard extends React.Component {
                     <td>
                         <button
                             className="btn btn-danger"
-                            onClick={() => this.eliminarProblema(problema.id)}
+                            onClick={() =>
+                                this.eliminarProblema(problema.idProblema)
+                            }
                         >
                             Eliminar
                         </button>
@@ -113,7 +126,12 @@ class GenerarScoreboard extends React.Component {
                     </button>
                 </div>
                 <div className="top-3">
-                    <button className="btn btn-success">Generar reporte</button>
+                    <button
+                        className="btn btn-success"
+                        onClick={() => this.generarReporte()}
+                    >
+                        Generar reporte
+                    </button>
                 </div>
                 <div className="top-3">
                     <table class="table">
@@ -135,4 +153,4 @@ class GenerarScoreboard extends React.Component {
     }
 }
 
-export default GenerarScoreboard;
+export default withAuthAdmin(withRouter(GenerarScoreboard));
