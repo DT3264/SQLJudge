@@ -241,11 +241,10 @@ namespace SQL_Judge.Controllers
             if (usuario == null) return -1;
 
             var dbContext = new SQLJudgeContext();
-            var resultados = new string[] { "AC", "WA", "RE" };
             var envios = from p in dbContext.Problemas
                                       join e in dbContext.Envios on p.IdProblema equals e.IdProblema
                                       join u in dbContext.Usuarios on e.IdUsuario equals u.IdUsuario
-                                      where p.IdProblema == idProblema && resultados.Contains(e.Veredicto) && u.Usuario1 == usuario
+                                      where p.IdProblema == idProblema && u.Usuario1 == usuario
                                       select new {e.Veredicto};
             // Hay envios correctos
             if (envios.Where(e => e.Veredicto == "AC").Count() > 0) return 1;
@@ -347,19 +346,20 @@ namespace SQL_Judge.Controllers
                     Codigo = request.sqlAEvaluar,
                     Respuesta = ""
                 };
-                if(envio.Codigo == "CD") {
-                    envio.Codigo = "WA";
+                if(envio.Veredicto == "CD") 
+                {
+                    envio.Veredicto = "WA";
                     envio.Respuesta = "Columnas duplicadas";
                 }
-                if (envio.Codigo == "NR")
+                if (envio.Veredicto == "NR")
                 {
-                    envio.Codigo = "WA";
-                    envio.Respuesta = "Número de renglones incorrectos";
+                    envio.Veredicto = "WA";
+                    envio.Respuesta = "No. de renglones incorrectos";
                 }
-                if (envio.Codigo == "NC")
+                if (envio.Veredicto == "NC")
                 {
-                    envio.Codigo = "WA";
-                    envio.Respuesta = "Número de columnas incorrectas";
+                    envio.Veredicto = "WA";
+                    envio.Respuesta = "No. de columnas incorrectas";
                 }
                 dbContext.Envios.Add(envio);
                 dbContext.SaveChanges();
@@ -369,7 +369,8 @@ namespace SQL_Judge.Controllers
                     idEnvio = envio.IdEnvio,
                     estadoEnvio = envio.Veredicto,
                     codigoFuenteEnvio = envio.Codigo,
-                    fechaYhoraEnvio = envio.Fecha.ToString("dd/MM/yyyy HH:mm")
+                    fechaYhoraEnvio = envio.Fecha.ToString("dd/MM/yyyy HH:mm"),
+                    respuesta = envio.Respuesta
                 };
                 return Ok(respuesta);
             }

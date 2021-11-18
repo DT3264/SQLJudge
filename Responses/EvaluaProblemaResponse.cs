@@ -16,5 +16,7 @@ namespace SQL_Judge.Responses
         public string  codigoFuenteEnvio { get; set; }
         [DefaultValue("29/05/2015 14:50")]
         public string fechaYhoraEnvio { get; set; }
+        [DefaultValue("No. de columnas incorrecto")]
+        public string respuesta { get; set; }
     }
 }
