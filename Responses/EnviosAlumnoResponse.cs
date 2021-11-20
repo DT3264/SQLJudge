@@ -10,5 +10,6 @@ namespace SQL_Judge.Responses
         public int IdEnvio { get; set; }
         public string estatus { get; set; }
         public DateTime horaYFecha { get; set; }
+        public string respuesta { get; set; }
     }
 }
