@@ -19,6 +19,7 @@ import ListadoProblemas from "./components/ListadoProblemas.js";
 import ActualizarProblema from "./components/ActualizarProblema.js";
 import Redaccion from "./components/Redaccion.js";
 import DetalleProblemasAlumno from "./components/DetalleProblemasAlumno.js";
+import Envios from "./components/Envios.js";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -41,6 +42,7 @@ export default class App extends Component {
                     <Route path="/problemset" component={Problemset} />
                     <Route path="/problem/:id" component={VistaProblema} />
                     <Route path="/crear-problema" component={CrearProblema} />
+                    <Route path="/envios/:id" component={Envios} />
                     <Route
                         path="/lista-problemas"
                         component={ListadoProblemas}
