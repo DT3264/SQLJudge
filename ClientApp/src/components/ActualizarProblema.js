@@ -32,6 +32,8 @@ class ActualizarProblema extends React.Component {
     render() {
         const problema = this.props.location.state.problema1;
 
+        console.log(problema);
+
         return (
             <div>
                 <EditProblemData

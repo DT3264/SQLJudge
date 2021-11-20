@@ -38,35 +38,17 @@ namespace SQL_Judge.Controllers
         [HttpPost("enviosAlumno")]
         [Authorize(Policy = "Alumnos")]
         [ProducesResponseType(typeof(EnviosAlumnoResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public IActionResult obtenerEnviosAlumno([FromBody] EliminarCodigoRequest value)
         {
-            List<EnviosAlumnoResponse> list = new List<EnviosAlumnoResponse>();
-            var problem1 = new EnviosAlumnoResponse();
-            problem1.IdEnvio = 123;
-            problem1.estatus = "AC";
-            problem1.horaYFecha = new DateTime(2020,5,1,8,30,52);
-
-            var problem2 = new EnviosAlumnoResponse();
-            problem2.IdEnvio = 124;
-            problem2.estatus = "WA";
-            problem2.horaYFecha = new DateTime(2020, 5, 1, 9, 30, 52);
-
-            var problem3 = new EnviosAlumnoResponse();
-            problem3.IdEnvio = 129;
-            problem3.estatus = "RE";
-            problem3.horaYFecha = new DateTime(2020, 5, 1, 9, 32, 52);
-
-            list.Add(problem1);
-            list.Add(problem2);
-            list.Add(problem3);
-
-            /*var usuario = User.Identity.Name;
             var dbContext = new SQLJudgeContext();
-            var envios = from e in dbContext.Envios
-                         where e.IdUsuario == 22
-                         select new { e.IdEnvio, e.Veredicto, e.Fecha };
-            */                
-            return Ok(list);
+            var usuario2 = User.Identity.Name;
+            var response = from e in dbContext.Envios
+                           join p in dbContext.Problemas on e.IdProblema equals p.IdProblema
+                           join us in dbContext.Usuarios on e.IdUsuario equals us.IdUsuario
+                           where us.Usuario1 == usuario2 && value.id == p.IdProblema
+                           select new { IdEnvio = e.IdEnvio, estatus = e.Veredicto, horaYFecha = e.Fecha, codigo = e.Codigo, respuesta = e.Respuesta};
+            return Ok(response);
         }
         /// <summary>
         /// Código fuente del envio correspondiente
@@ -87,13 +69,20 @@ namespace SQL_Judge.Controllers
         [HttpPost("codigoFuente")]
         [Authorize(Policy = "Alumnos")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public IActionResult codigoFuente([FromBody] EliminarCodigoRequest value)
         {
-            string codigo = "SELECT O.ORDERID, O.ORDERDATE, C.CUSTOMERID, C.COMPANYNAME " +
-                "FROM ORDERS O JOIN CUSTOMERS C ON C.CUSTOMERID=O.CUSTOMERID " +
-                "WHERE YEAR(ORDERDATE)='1997' AND MONTH(ORDERDATE)='03';";
-
-            return Ok(codigo);
+            var dbContext = new SQLJudgeContext();
+            var response = (from en in dbContext.Envios
+                          where en.IdEnvio == value.id
+                          select new { en.Codigo });
+            if (!response.Any())
+            {
+                return BadRequest("Envio no encontrado");
+            }
+            else {
+                return Ok(response.First());
+            }     
         }
         /// <summary>
         /// Una descripción del problema que contiene:
@@ -114,15 +103,24 @@ namespace SQL_Judge.Controllers
         /// <response code="400">El problema no existe</response>  
         [HttpPost("descripcionProblema")]
         [Authorize(Policy = "Alumnos")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DescripcionProblemaResponses), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public IActionResult descripcionProblema([FromBody] EliminarCodigoRequest value)
         {
-            var desc = new DescripcionProblemaResponses();
-            desc.problema = "Cuidades de Guanajuato";
-            desc.idProblema = 1234;
-            desc.BaseDeDatos = "WORLD";
-
-            return Ok(desc);
+            var dbContext = new SQLJudgeContext();
+            var response = (from p in dbContext.Problemas
+                            join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
+                            where p.IdProblema == value.id
+                            select new { problema = p.Nombre, idProblema = p.IdProblema, BaseDeDatos = b.Nombre });
+            if (!response.Any())
+            {
+                return BadRequest("El problema no existe");
+            }
+            else 
+            {
+                return Ok(response.First());
+            }
+            
         }
         /// <summary>
         /// Detalles de los problemas del alumno con la lista de los problemas
@@ -144,37 +142,81 @@ namespace SQL_Judge.Controllers
         [HttpPost("detalleProblemasAlumno")]
         [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(DetalleProblemasAlumnoResponses), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public IActionResult detalleProblemasAlumno([FromBody] EliminarCodigoRequest id)
         {
-            DetalleProblemasAlumnoResponses res = new DetalleProblemasAlumnoResponses();
-            List<ProblemasResueltasResponses> prob = new List<ProblemasResueltasResponses>();
-            ProblemasResueltasResponses P1 = new ProblemasResueltasResponses();
+            
 
-            res.nombreAlumno = "Juan Perez";
-            res.usuario = "JuanPz";
-            res.envios = 100;
-            res.aceptados = 70;
-            res.incorrectos = 15;
-            res.error = 15;
-            P1.id = 1;
-            P1.nombre = "Cuidades de Mexico";
-            P1.fechaHoraEnvio = new DateTime(2020, 5, 1, 9, 32, 52);
-            P1.codigoFuente = "SELECT O.ORDERID, O.ORDERDATE, C.CUSTOMERID, C.COMPANYNAME " +
-                "FROM ORDERS O JOIN CUSTOMERS C ON C.CUSTOMERID=O.CUSTOMERID " +
-                "WHERE YEAR(ORDERDATE)='1997' AND MONTH(ORDERDATE)='03';";
-            P1.BaseDeDatos = "WORLD";
-            prob.Add(P1);
-            P1.id = 2;
-            P1.BaseDeDatos = "SAKILA";
-            prob.Add(P1);
-            P1.id = 3;
-            P1.BaseDeDatos = "WORLD";
-            prob.Add(P1);
-            res.problemasResueltos = prob;
+            var dbContext = new SQLJudgeContext();
+            var problemasR = from p in dbContext.Problemas
+                             join e in dbContext.Envios on p.IdProblema equals e.IdProblema
+                             where e.IdUsuario == id.id && e.Veredicto == "AC"
+                             select new
+                             {
+                                 id = p.IdProblema,
+                                 nombre = p.Nombre,
+                                 fechaHoraEnvio = e.Fecha,
+                                 codigoFuente = e.Codigo
+                             };
 
-
-
-            return Ok(res);
+            var response = from u in dbContext.Usuarios
+                           where u.IdUsuario == id.id
+                           select new
+                           {
+                               nombreAlumno = string.Join(" ", u.Nombre, u.ApellidoP, u.ApellidoM),
+                               usuario = u.Usuario1,
+                               envios = (
+                                    (from e in dbContext.Envios
+                                     where e.IdUsuario == u.IdUsuario
+                                     select new { e.IdEnvio }).Count()
+                               ),
+                               aceptados = (
+                                    (from e in dbContext.Envios
+                                     where e.IdUsuario == u.IdUsuario && e.Veredicto == "AC"
+                                     select new { e.IdEnvio }).Count()
+                               ),
+                               incorrectos = (
+                                    (from e in dbContext.Envios
+                                     where e.IdUsuario == u.IdUsuario && e.Veredicto == "WA"
+                                     select new { e.IdEnvio }).Count()
+                               ),
+                               error = (
+                                    (from e in dbContext.Envios
+                                     where e.IdUsuario == u.IdUsuario && e.Veredicto != "AC" && e.Veredicto != "WA"
+                                     select new { e.IdEnvio }).Count()
+                               ),
+                               problemasResueltos = problemasR.ToList()
+                           };
+            if (!response.Any())
+            {
+                return BadRequest("El alumno no existe");
+            }
+            else {
+                return Ok(response.First());
+            }
+        }
+        /// <summary>
+        /// Lista de alumnos con nombre, usuario y problemas resueltos
+        /// </summary>
+        /// <returns>Lista de alumnos</returns>
+        /// <response code="200">Lista de los alumnos</response>
+        [HttpPost("listaAlumnosEnvio")]
+        [Authorize(Policy = "Admins")]
+        [ProducesResponseType(typeof(ListaAlumnosEnvioResponses), StatusCodes.Status200OK)]
+        public IActionResult listaAlumnosEnvio()
+        {
+            var dbContext = new SQLJudgeContext();
+            var respose = from u in dbContext.Usuarios
+                          where u.Tipo == "Alumno" 
+                          select new { id = u.IdUsuario, usuario = u.Usuario1, nombre = string.Join(" ", u.Nombre, u.ApellidoP, u.ApellidoM),
+                              problemasResueltos = (
+                               from es in dbContext.Envios
+                               join us in dbContext.Usuarios on es.IdUsuario equals us.IdUsuario
+                               where es.Veredicto == "AC" && us.IdUsuario == u.IdUsuario
+                               select new { es.IdProblema }
+                              ).Distinct().Count()
+                          };
+            return Ok(respose);
         }
     }
 }

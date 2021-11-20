@@ -11,12 +11,52 @@ class VistaProblema extends React.Component {
         categoria : '',
         baseDatos : '',
         descripcion : '',
-        resueltos : 0
+        resueltos : 0,
+        codigoFuente : '',
+        estadoEnvio : ''
     }
     
     componentDidMount() {
         //console.log(this.props);
         this.getVistaProblema(1);
+    }
+
+    handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+    
+        this.setState({
+          [name]: value
+        });
+    }
+
+    sendSolution = async (id, codigoFuente) => {
+        console.log(id);
+        console.log(codigoFuente);
+        try{
+            var valueToken = "Bearer " + sessionStorage.getItem("token");
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: valueToken,
+            };
+            const respuesta = await axios.post(
+                "/api/Problemas/evaluaProblema",
+                {
+                    idProblema: id,
+                    sqlAEvaluar : codigoFuente
+                },
+                {
+                    headers: headers,
+                }
+            );
+            //this.setState({ usuarios: respuesta.data });
+            this.setState({ estadoEnvio: respuesta.data.estadoEnvio});
+            console.log(this.state.estadoEnvio);
+        }
+        catch{
+            
+        }
     }
 
     getVistaProblema =  async (id) => {
@@ -64,11 +104,21 @@ class VistaProblema extends React.Component {
                     <label>Codigo fuente : </label>
                     <textarea
                         className="form-control"
+                        name = "codigoFuente"
                         style={{ height: "25rem" }}
+                        onChange= { this.handleInputChange }
+                        value= {this.state.codigoFuente}
                     ></textarea>
                 </div>
                 <div style={{marginTop : "2rem"}}>
-                    <button type="button" class="btn btn-success">Enviar</button> 
+                    <button type="button" class="btn btn-success" 
+                        onClick={() =>
+                            this.sendSolution(
+                                this.state.id,
+                                this.state.codigoFuente
+                            )
+                        }
+                    >Enviar</button> 
                 </div>
             </div>
         );

@@ -21,7 +21,6 @@ namespace SQL_Judge.Controllers
         /// <returns>Regresa un AuthResponse con el token de sesión, usuario y tipo de usuario</returns>
         /// <response code="200">Regresa las categorías existentes</response>  
         [HttpPost("obtenerCategorias")]
-        [Authorize(Policy = "Admins")]
         [ProducesResponseType(typeof(List<ObtenerCategoriasResponse>), StatusCodes.Status200OK)]
         public IActionResult ObtenerCategorias()
         {

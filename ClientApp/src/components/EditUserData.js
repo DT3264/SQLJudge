@@ -110,7 +110,7 @@ class EditUserData extends React.Component {
             this.state.formulario.apellidoPaterno
         );
         var testApellidoMaterno = validaciones.validarApellido(
-            this.state.formulario.apellidoPaterno
+            this.state.formulario.apellidoMaterno
         );
         var testCodigoVerificacion = validaciones.validarCodigoRegistro(
             this.state.formulario.codigoRegistro

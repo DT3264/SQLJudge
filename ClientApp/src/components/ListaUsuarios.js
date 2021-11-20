@@ -235,15 +235,17 @@ class ListaUsuarios extends React.Component {
                 >
                     <h1> Usuarios Existentes </h1>
                 </div>
-                <div style={{
-                    marginBottom:"1rem"
-                }}>
-                <button
-                    className="btn btn-primary"
-                    onClick={() => this.handleOpenAddUser()}
+                <div
+                    style={{
+                        marginBottom: "1rem",
+                    }}
                 >
-                    Agregar Usuario
-                </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => this.handleOpenAddUser()}
+                    >
+                        Agregar Docente
+                    </button>
                 </div>
 
                 <div className="container">
@@ -309,7 +311,7 @@ class ListaUsuarios extends React.Component {
                     pressedButton={this.editUser}
                     errorNombre=""
                     formularioInput={{
-                        id : false,
+                        id: false,
                         nombreUsuario: true,
                         nombre: false,
                         apellidoPaterno: false,
@@ -345,9 +347,8 @@ class ListaUsuarios extends React.Component {
                     nombre={this.state.nombre}
                     id={this.state.idUsuario}
                     deleteUser={this.deleteUser}
-                    usuario = {this.state.nombreUsuario}
+                    usuario={this.state.nombreUsuario}
                 />
-                
             </div>
         );
     }
