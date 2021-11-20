@@ -41,6 +41,10 @@ export default class App extends Component {
                         path="/generar-codigos"
                         component={GenerarCodigoRegistro}
                     />
+                    <Route
+                        path="/envios/alumno/:id"
+                        component={DetalleProblemasAlumno}
+                    />
                     <Route path="/login" component={Login} />
                     <Route path="/registro" component={Registro} />
                     <Route path="/lista-usuarios" component={ListaUsuarios} />
@@ -58,10 +62,7 @@ export default class App extends Component {
                         component={ActualizarProblema}
                     />
                     <Route path="/redaccion" component={Redaccion} />
-                    <Route
-                        path="/envios/alumno/:id"
-                        component={DetalleProblemasAlumno}
-                    />
+                    
                     <Route
                         path="/generar-reporte"
                         component={GenerarScoreboard}
