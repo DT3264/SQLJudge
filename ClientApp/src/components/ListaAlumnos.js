@@ -1,15 +1,10 @@
 import Validaciones from "./Validaciones";
 import "./General.css";
-import axios from 'axios';
-//import { withRouter } from "react-router";
+import axios from "axios";
 import React from "react";
-import EditUserData from "./EditUserData";
-import Login from "./Login";
-import ModalDeleteUser from "../modals/ModalDeleteUser";
 import withAuthAdmin from "./Auth/withAuthAdmin";
-import { Link, withRouter } from 'react-router-dom';
-import withAuthGeneral from "./Auth/withAuthGeneral";
-
+import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 
 class ListaAlumnos extends React.Component {
     state = {
@@ -18,8 +13,8 @@ class ListaAlumnos extends React.Component {
         alumnos: [],
         showDeleteUser: false,
         showEditUser: false,
-        showAddUser : false,
-        problemasResueltos : 0,
+        showAddUser: false,
+        problemasResueltos: 0,
         nombreUsuario: "",
         nombre: "",
         apellidoPaterno: "",
@@ -31,7 +26,7 @@ class ListaAlumnos extends React.Component {
         password: "",
         verifyPassword: "",
         codigoRegistro: "",
-        errorNombreUsuario : ""
+        errorNombreUsuario: "",
     };
 
     componentDidMount() {
@@ -46,7 +41,7 @@ class ListaAlumnos extends React.Component {
         let path = `/envios/alumno/${id}`;
         this.props.history.push(path);
         console.log(path);
-      }
+    };
 
     abrirModal = () => {
         this.state.modalShow = true;
@@ -70,26 +65,17 @@ class ListaAlumnos extends React.Component {
         console.log("hola");
     };
 
-
     render() {
         const ListaAMostrar = this.state.alumnos.map((alumno) => {
             return (
                 <tr>
                     <td>{alumno.usuario}</td>
-                    <td>
-                        {alumno.nombre}
-                    </td>
+                    <td>{alumno.nombre}</td>
                     <td>{alumno.problemasResueltos}</td>
                     <td>
-                        
-                        <Link
-                            className="btn btn-success"
-                            to="/envios/alumno/2"    
-                        >
-                        </Link>
                         <button
                             className="btn btn-success"
-                            onClick= {this.routeChange(alumno.id)}
+                            onClick={() => this.routeChange(alumno.id)}
                         >
                             Ver lista de problemas
                         </button>
@@ -114,8 +100,7 @@ class ListaAlumnos extends React.Component {
                     style={{
                         marginBottom: "1rem",
                     }}
-                >
-                </div>
+                ></div>
 
                 <div className="container">
                     <div className="row">
@@ -134,8 +119,6 @@ class ListaAlumnos extends React.Component {
                         </div>
                     </div>
                 </div>
-
-                
             </div>
         );
     }
