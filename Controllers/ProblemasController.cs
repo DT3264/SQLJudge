@@ -455,7 +455,7 @@ namespace SQL_Judge.Controllers
                 resultados.Add(new
                 {
                     usuario = usuario.usuario,
-                    nommbreCompleto = string.Format("{0} {1} {2}", usuario.Nombre, usuario.ApellidoP, usuario.ApellidoM),
+                    nombreCompleto = string.Format("{0} {1} {2}", usuario.Nombre, usuario.ApellidoP, usuario.ApellidoM),
                     veredictos = veredictosUsuario
                 }); ;
             }
