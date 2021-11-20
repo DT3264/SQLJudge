@@ -47,7 +47,7 @@ namespace SQL_Judge.Controllers
                            join p in dbContext.Problemas on e.IdProblema equals p.IdProblema
                            join us in dbContext.Usuarios on e.IdUsuario equals us.IdUsuario
                            where us.Usuario1 == usuario2 && value.id == p.IdProblema
-                           select new { IdEnvio = e.IdEnvio, estatus = e.Veredicto, horaYFecha = e.Fecha, codigo = e.Codigo};
+                           select new { IdEnvio = e.IdEnvio, estatus = e.Veredicto, horaYFecha = e.Fecha, codigo = e.Codigo, respuesta = e.Respuesta};
             return Ok(response);
         }
         /// <summary>
@@ -205,11 +205,10 @@ namespace SQL_Judge.Controllers
         [ProducesResponseType(typeof(ListaAlumnosEnvioResponses), StatusCodes.Status200OK)]
         public IActionResult listaAlumnosEnvio()
         {
-
             var dbContext = new SQLJudgeContext();
             var respose = from u in dbContext.Usuarios
                           where u.Tipo == "Alumno" 
-                          select new { usuario = u.Usuario1, nombre = string.Join(" ", u.Nombre, u.ApellidoP, u.ApellidoM),
+                          select new { id = u.IdUsuario, usuario = u.Usuario1, nombre = string.Join(" ", u.Nombre, u.ApellidoP, u.ApellidoM),
                               problemasResueltos = (
                                from es in dbContext.Envios
                                join us in dbContext.Usuarios on es.IdUsuario equals us.IdUsuario
@@ -217,7 +216,6 @@ namespace SQL_Judge.Controllers
                                select new { es.IdProblema }
                               ).Distinct().Count()
                           };
-
             return Ok(respose);
         }
     }
