@@ -36,7 +36,6 @@ namespace SQL_Judge.Controllers
         /// <response code="200">Lista de envios realizados por alumno</response>
         /// <response code="400">El problema no existe</response>   
         [HttpPost("enviosAlumno")]
-        [Authorize(Policy = "Alumnos")]
         [ProducesResponseType(typeof(EnviosAlumnoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public IActionResult obtenerEnviosAlumno([FromBody] EliminarCodigoRequest value)
