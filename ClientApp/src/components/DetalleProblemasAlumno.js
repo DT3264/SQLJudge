@@ -21,6 +21,7 @@ class DetalleProblemasAlumno extends React.Component {
     };
 
     componentDidMount() {
+        console.log("hola");
         this.obtenerDatos();
     }
 

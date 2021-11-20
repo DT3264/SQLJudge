@@ -1,17 +1,18 @@
 import Validaciones from "./Validaciones";
 import "./General.css";
 import axios from 'axios';
-import { withRouter } from "react-router";
+//import { withRouter } from "react-router";
 import React from "react";
 import EditUserData from "./EditUserData";
 import Login from "./Login";
 import ModalDeleteUser from "../modals/ModalDeleteUser";
 import withAuthAdmin from "./Auth/withAuthAdmin";
+import { Link, withRouter } from 'react-router-dom';
+import withAuthGeneral from "./Auth/withAuthGeneral";
 
 
 class ListaAlumnos extends React.Component {
     state = {
-        idUsuario: 0,
         apellidoP: "",
         apellidoM: "",
         alumnos: [],
@@ -38,8 +39,14 @@ class ListaAlumnos extends React.Component {
     }
 
     mostrarAlerta = (nombre) => {
-        alert("hola " + nombre);
+        alert("hola " + this.state.idUsuario);
     };
+
+    routeChange = (id) => {
+        let path = `/envios/alumno/${id}`;
+        this.props.history.push(path);
+        console.log(path);
+      }
 
     abrirModal = () => {
         this.state.modalShow = true;
@@ -75,8 +82,14 @@ class ListaAlumnos extends React.Component {
                     <td>{alumno.problemasResueltos}</td>
                     <td>
                         
+                        <Link
+                            className="btn btn-success"
+                            to="/envios/alumno/2"    
+                        >
+                        </Link>
                         <button
                             className="btn btn-success"
+                            onClick= {this.routeChange(alumno.id)}
                         >
                             Ver lista de problemas
                         </button>
@@ -128,4 +141,4 @@ class ListaAlumnos extends React.Component {
     }
 }
 
-export default  withAuthAdmin( ListaAlumnos );
+export default  withAuthAdmin( withRouter( ListaAlumnos ));
