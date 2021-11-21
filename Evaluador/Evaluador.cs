@@ -17,10 +17,7 @@ namespace SQL_Judge.Evaluador
         /// <returns>Cadena de conexión a la base de datos.</returns>
         public string GetConnectionString(string database)
         {
-            DotEnv.Load();
-            var envVars = DotEnv.Read();
-            string connectionString = envVars["DB_EVALUADOR_URL"];
-            return string.Format(connectionString, database);
+            return string.Format("Server=database-2.cdwt2nqbqpoy.us-east-2.rds.amazonaws.com;Database={0};Uid=evaluador;Pwd=evaluador;Allow User Variables=true", database);
         }
 
         /// <summary>
