@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'SQL-Judge'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_602C12327B3945528B73BC2E366FE1F4 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A43884693BB1412AB6451F54E5B3781E }}
           package: .
