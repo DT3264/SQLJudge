@@ -147,7 +147,7 @@ namespace SQL_Judge.Controllers
             var problemas = from p in dbContext.Problemas
                             join c in dbContext.Categorias on p.IdCategoria equals c.IdCategoria
                             join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
-                            select new { id = p.IdProblema, p.Nombre, p.Descripcion, categoria = new { c.IdCategoria, c.Nombre }, p.Dificultad, noResueltos = obtenResueltosPorProblema(p.IdProblema), baseDatos = new { b.IdBase, b.Nombre }, p.Solucion, resuelto = compruebaMejorResultadoEnProblema(usuario, p.IdProblema), p.ComprobarColumnas };
+                            select new { id = p.IdProblema, p.Nombre, categoria = new { c.IdCategoria, c.Nombre }, p.Dificultad, noResueltos = obtenResueltosPorProblema(p.IdProblema), baseDatos = new { b.IdBase, b.Nombre }, resuelto = compruebaMejorResultadoEnProblema(usuario, p.IdProblema) };
 
             return Ok(problemas);
         }
@@ -471,7 +471,8 @@ namespace SQL_Judge.Controllers
         private string obtenerMejorVeredicto(IQueryable<string> veredictosQuery)
         {
             if (veredictosQuery.Contains("AC")) return "AC";
-            else if(veredictosQuery.Count()>0) return "WA";
+            if (veredictosQuery.Contains("WA")) return "WA";
+            if (veredictosQuery.Contains("RT")) return "RT";
             // Si no hay ningun envío
             return "";
         }
