@@ -471,8 +471,7 @@ namespace SQL_Judge.Controllers
         private string obtenerMejorVeredicto(IQueryable<string> veredictosQuery)
         {
             if (veredictosQuery.Contains("AC")) return "AC";
-            if (veredictosQuery.Contains("WA")) return "WA";
-            if (veredictosQuery.Contains("RE")) return "RE";
+            else if(veredictosQuery.Count()>0) return "WA";
             // Si no hay ningun envío
             return "";
         }
