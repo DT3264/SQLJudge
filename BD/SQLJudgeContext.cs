@@ -33,7 +33,11 @@ namespace SQL_Judge.BD
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySQL("Server=database-2.cdwt2nqbqpoy.us-east-2.rds.amazonaws.com;Database=SQLJudge;Uid=root;Pwd=00000000");
+                //optionsBuilder.UseMySQL("Server=localhost;Database=SQLJudge;Uid=root;Pwd=0000");
+
+                DotEnv.Load();
+                var envVars = DotEnv.Read();
+                optionsBuilder.UseMySQL(envVars["DB_URL"]);
             }
         }
 
