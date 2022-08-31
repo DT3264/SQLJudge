@@ -202,7 +202,7 @@ namespace SQL_Judge.Controllers
             var problemas = from p in problemasproblemasConIDCategoria
                             select new { p.IdProblema, p.Nombre, p.nombreCategoria, p.Dificultad, noResueltos = obtenResueltosPorProblema(p.IdProblema), resuelto = compruebaMejorResultadoEnProblema(usuario, p.IdProblema) };
 
-
+            problemas = problemas.OrderBy(p => p.IdProblema);
             // Ordena
             var problemasOrdenados = (request.ordenaPor, request.ascendente) switch
             {
