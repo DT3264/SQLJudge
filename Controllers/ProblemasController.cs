@@ -376,7 +376,7 @@ namespace SQL_Judge.Controllers
             }
             catch
             {
-                return BadRequest("El problema no existe");
+                return BadRequest("Surgió un problema evaluando el problema");
             }
         }
 
