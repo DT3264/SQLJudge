@@ -70,6 +70,34 @@ class Envios extends React.Component {
             <td>{envio.horaYFecha}</td>
           </tr>
         );
+      } else if (envio.estatus == "PE") {
+        return (
+          <tr>
+            <td>{envio.idEnvio}</td>
+            <td
+              style={{
+                color: "black",
+              }}
+            >
+              Evaluando
+            </td>
+            <td>
+              <button
+                style={{
+                  border: "none",
+                  background: "none",
+                  color: "black",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                }}
+                onClick={() => this.motrarCodigo(envio.codigo)}
+              >
+                Ver codigo fuente
+              </button>
+            </td>
+            <td>{envio.horaYFecha}</td>
+          </tr>
+        );
       } else if (envio.estatus == "WA") {
         return (
           <tr>

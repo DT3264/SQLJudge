@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `SQLJudge`.`Envios` (
   `idUsuario` INT NOT NULL,
   `idProblema` INT NOT NULL,
   `fecha` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `veredicto` ENUM('AC', 'WA', 'RE', 'NC', 'NR', 'RT', 'CD') NOT NULL,
+  `veredicto` ENUM('AC', 'WA', 'RE', 'NC', 'NR', 'RT', 'CD', 'PE') NOT NULL,
   `codigo` TEXT NOT NULL,
   `Respuesta` TEXT NOT NULL,
   PRIMARY KEY (`idEnvio`, `idUsuario`, `idProblema`),
