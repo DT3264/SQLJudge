@@ -41,7 +41,7 @@ class VistaProblema extends React.Component {
     console.log(id);
     console.log(codigoFuente);
     try {
-      var valueToken = "Bearer " + sessionStorage.getItem("token");
+      var valueToken = "Bearer " + localStorage.getItem("token");
       const headers = {
         "Content-Type": "application/json",
         Authorization: valueToken,
@@ -65,7 +65,7 @@ class VistaProblema extends React.Component {
 
   getVistaProblema = async (id) => {
     try {
-      var valueToken = "Bearer " + sessionStorage.getItem("token");
+      var valueToken = "Bearer " + localStorage.getItem("token");
       const headers = {
         "Content-Type": "application/json",
         Authorization: valueToken,

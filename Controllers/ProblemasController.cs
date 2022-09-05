@@ -321,63 +321,79 @@ namespace SQL_Judge.Controllers
         public IActionResult evaluaproblema([FromBody] EvaluaProblemaRequest request)
         {
             var dbContext = new SQLJudgeContext();
-            var problemas = from p in dbContext.Problemas
-                           join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
-                           where p.IdProblema == request.idProblema
-                           select new { p.IdProblema, p.Solucion, p.ComprobarColumnas, baseDeDatos=b.Nombre};
-
-            // El try se requiere específicamente para la linea problemas.First() en caso de que se envíe la solución de un problema que no exista
-            try
+            var problema = (from p in dbContext.Problemas
+                            join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
+                            where p.IdProblema == request.idProblema
+                            select new { p.IdProblema, p.Solucion, p.ComprobarColumnas, baseDeDatos = b.Nombre }).FirstOrDefault();
+            if (problema == default) return BadRequest("No existe el problema con id " + request.idProblema);
+            var usuario = User.Identity.Name;
+            var fechaEvaluacion = DateTime.Now;
+            var idUsuario = (from u in dbContext.Usuarios
+                             where u.Usuario1 == usuario
+                             select u.IdUsuario).First();
+            var envio = new Envio()
             {
-                var problema = problemas.First();
-                // var fechaEvaluacion = DateTime.Now.ToUniversalTime(); // Si es horario en UTC, es este
-                var fechaEvaluacion = DateTime.Now;
-                var respuestaEvaluacion = new Evaluador.Evaluador().Evaluar(request.sqlAEvaluar, problema.Solucion, problema.ComprobarColumnas, problema.baseDeDatos);
-                var usuario = User.Identity.Name;
-                var idUsuario = (from u in dbContext.Usuarios
-                                 where u.Usuario1 == usuario
-                                 select u.IdUsuario).First();
-                var envio = new Envio()
-                {
-                    IdUsuario = idUsuario,
-                    IdProblema = problema.IdProblema,
-                    Fecha = fechaEvaluacion,
-                    Veredicto = respuestaEvaluacion,
-                    Codigo = request.sqlAEvaluar,
-                    Respuesta = ""
-                };
-                if(envio.Veredicto == "CD") 
-                {
-                    envio.Veredicto = "WA";
-                    envio.Respuesta = "Columnas duplicadas";
-                }
-                if (envio.Veredicto == "NR")
-                {
-                    envio.Veredicto = "WA";
-                    envio.Respuesta = "No. de renglones incorrectos";
-                }
-                if (envio.Veredicto == "NC")
-                {
-                    envio.Veredicto = "WA";
-                    envio.Respuesta = "No. de columnas incorrectas";
-                }
-                dbContext.Envios.Add(envio);
-                dbContext.SaveChanges();
+                IdUsuario = idUsuario,
+                IdProblema = problema.IdProblema,
+                Fecha = fechaEvaluacion,
+                Veredicto = "PE", // Pendiente
+                Codigo = request.sqlAEvaluar,
+                Respuesta = ""
+            };
 
-                var respuesta = new EvaluaProblemaResponse()
-                {
-                    idEnvio = envio.IdEnvio,
-                    estadoEnvio = envio.Veredicto,
-                    codigoFuenteEnvio = envio.Codigo,
-                    fechaYhoraEnvio = envio.Fecha.ToString("dd/MM/yyyy HH:mm"),
-                    respuesta = envio.Respuesta
-                };
-                return Ok(respuesta);
-            }
-            catch
+            dbContext.Envios.Add(envio);
+            dbContext.SaveChanges();
+
+            var respuesta = new EvaluaProblemaResponse()
             {
-                return BadRequest("El problema no existe");
+                idEnvio = envio.IdEnvio,
+                estadoEnvio = envio.Veredicto,
+                codigoFuenteEnvio = envio.Codigo,
+                fechaYhoraEnvio = envio.Fecha.ToString("dd/MM/yyyy HH:mm"),
+                respuesta = envio.Respuesta
+            };
+
+            evaluaProblemaAsync(request, envio, User.Identity.Name);
+
+            return Ok(respuesta);
+        }
+
+        private async void evaluaProblemaAsync(EvaluaProblemaRequest request, Envio envio, String usuario) {
+
+            var dbContext = new SQLJudgeContext();
+            var problema = (from p in dbContext.Problemas
+                            join b in dbContext.Basesdedatos on p.IdBase equals b.IdBase
+                            where p.IdProblema == request.idProblema
+                            select new { p.IdProblema, p.Solucion, p.ComprobarColumnas, baseDeDatos = b.Nombre }).FirstOrDefault();
+
+            var respuestaEvaluacion = new Evaluador.Evaluador().Evaluar(request.sqlAEvaluar, problema.Solucion, problema.ComprobarColumnas, problema.baseDeDatos);
+            var idUsuario = (from u in dbContext.Usuarios
+                             where u.Usuario1 == usuario
+                             select u.IdUsuario).First();
+
+            // Actualiza el veredicto
+            if (respuestaEvaluacion == "CD")
+            {
+                envio.Veredicto = "WA";
+                envio.Respuesta = "Columnas duplicadas";
             }
+            else if (respuestaEvaluacion == "NR")
+            {
+                envio.Veredicto = "WA";
+                envio.Respuesta = "No. de renglones incorrectos";
+            }
+            else if (respuestaEvaluacion == "NC")
+            {
+                envio.Veredicto = "WA";
+                envio.Respuesta = "No. de columnas incorrectas";
+            }
+            else
+            {
+                envio.Veredicto = respuestaEvaluacion;
+            }
+            dbContext.Envios.Update(envio);
+            dbContext.SaveChanges();
+
         }
 
         /// <summary>
