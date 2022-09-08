@@ -86,5 +86,28 @@ namespace SQL_Judge.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Obtiene los grupos a los que pertenece el alumno
+        /// </summary>
+        /// <returns>Una lista incluyendo pares {id, nombre} de los grupos donde está inscrito el alumno</returns>
+        // GET: api/Grupos/obtenerGruposAlumno
+        [HttpGet("obtenerGruposAlumno")]
+        public async Task<ActionResult<Grupo>> ObtenerGruposAlumno()
+        {
+            var dbContext = new SQLJudgeContext();
+
+            var usuario = User.Identity.Name;
+            var idAlumno = (from u in dbContext.Usuarios
+                             where u.Usuario1 == usuario
+                             select u.IdUsuario).First();
+            var gruposInscritos = from registros in dbContext.Registrogrupos
+                         join usuarios in dbContext.Usuarios on registros.IdUsuario equals usuarios.IdUsuario
+                         join grupos in dbContext.Grupos on registros.IdGrupo equals grupos.IdGrupo
+                         where usuarios.Usuario1 == usuario
+                         select new { grupos.IdGrupo, grupos.Nombre };
+
+            return Ok(gruposInscritos);
+        }
     }
 }
