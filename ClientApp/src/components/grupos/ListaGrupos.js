@@ -8,6 +8,21 @@ function ListaGrupos({ history }) {
   const [state, setState] = useState({});
   const [nombreGrupo, setNombreGrupo] = useState("");
 
+  const eliminaGrupo = async (id) => {
+    console.log(nombreGrupo);
+    var valueToken = "Bearer " + localStorage.getItem("token");
+    console.log(valueToken);
+    const headers = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: valueToken,
+      },
+    };
+    const response = await axios.delete(`/api/Grupos/${id}`, headers);
+    console.log(response);
+    populateData();
+  };
+
   const populateData = async () => {
     var valueToken = "Bearer " + localStorage.getItem("token");
     const headers = {
@@ -40,7 +55,7 @@ function ListaGrupos({ history }) {
     populateData();
   };
 
-  const actualizaNombreGrupo = (event) => {
+  const handleInputChange = (event) => {
     const target = event.target;
     const value = target.value;
     setNombreGrupo(value);
@@ -52,6 +67,14 @@ function ListaGrupos({ history }) {
         <td>{grupo.nombre}</td>
         <td>{grupo.codigoClase}</td>
         <td>{grupo.registros}</td>
+        <td>
+          <button
+            className="btn btn-success"
+            onClick={() => eliminaGrupo(grupo.idGrupo)}
+          >
+            Eliminar grupo
+          </button>
+        </td>
       </tr>
     );
   });
@@ -89,7 +112,7 @@ function ListaGrupos({ history }) {
               name="titulo"
               className="form-control"
               value={nombreGrupo}
-              onChange={actualizaNombreGrupo}
+              onChange={handleInputChange}
             />
           </div>
         </div>
@@ -111,6 +134,7 @@ function ListaGrupos({ history }) {
                   <th scope="col">Grupo</th>
                   <th scope="col">Codigo</th>
                   <th scope="col">Alumnos inscritos</th>
+                  <th scope="col">Acciones</th>
                 </tr>
               </thead>
               <tbody>{ListaAMostrar}</tbody>

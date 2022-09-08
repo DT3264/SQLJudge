@@ -68,5 +68,23 @@ namespace SQL_Judge.Controllers
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        // DELETE: api/Grupos/5
+        [Authorize(Policy = "Admins")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGrupo(int id)
+        {
+
+            var dbContext = new SQLJudgeContext();
+            var grupo = await dbContext.Grupos.FindAsync(id);
+            if (grupo == null)
+            {
+                return NotFound();
+            }
+
+            dbContext.Grupos.Remove(grupo);
+            await dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
