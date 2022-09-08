@@ -40,7 +40,7 @@ namespace SQL_Judge.Controllers
         // POST: api/Grupos
         [Authorize(Policy = "Admins")]
         [HttpGet("gruposAdministrados")]
-        public async Task<ActionResult<Grupo>> CreaGrupo()
+        public async Task<ActionResult<Grupo>> ObtenerGruposAdministrados()
         {
             var dbContext = new SQLJudgeContext();
 
