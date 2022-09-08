@@ -115,12 +115,12 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `SQLJudge`.`Grupos` (
   `idGrupo` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
-  `docente` INT NOT NULL,
+  `idDocente` INT NOT NULL,
   `codigoClase` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`idGrupo`),
-  INDEX `fk_Grupo_Usuarios1_idx` (`docente` ASC) VISIBLE,
+  INDEX `fk_Grupo_Usuarios1_idx` (`idDocente` ASC) VISIBLE,
   CONSTRAINT `fk_Grupo_Usuarios1`
-    FOREIGN KEY (`docente`)
+    FOREIGN KEY (`idDocente`)
     REFERENCES `SQLJudge`.`Usuarios` (`idUsuario`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)

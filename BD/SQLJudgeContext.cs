@@ -140,7 +140,7 @@ namespace SQL_Judge.BD
 
                 entity.ToTable("grupos");
 
-                entity.HasIndex(e => e.Docente, "fk_Grupo_Usuarios1_idx");
+                entity.HasIndex(e => e.IdDocente, "fk_Grupo_Usuarios1_idx");
 
                 entity.Property(e => e.IdGrupo).HasColumnName("idGrupo");
 
@@ -149,7 +149,7 @@ namespace SQL_Judge.BD
                     .HasMaxLength(10)
                     .HasColumnName("codigoClase");
 
-                entity.Property(e => e.Docente).HasColumnName("docente");
+                entity.Property(e => e.IdDocente).HasColumnName("idDocente");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
@@ -158,7 +158,7 @@ namespace SQL_Judge.BD
 
                 entity.HasOne(d => d.DocenteNavigation)
                     .WithMany(p => p.Grupos)
-                    .HasForeignKey(d => d.Docente)
+                    .HasForeignKey(d => d.IdDocente)
                     .HasConstraintName("fk_Grupo_Usuarios1");
             });
 
