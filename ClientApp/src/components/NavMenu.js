@@ -90,6 +90,11 @@ class NavMenu extends Component {
               Problemset
             </Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/lista-grupos">
+              Ver grupos
+            </Link>
+          </li>
         </ul>
       );
     }
@@ -164,6 +169,11 @@ class NavMenu extends Component {
                 </Link>
               </li>
             </ul>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/lista-grupos">
+              Ver grupos
+            </Link>
           </li>
         </ul>
       );

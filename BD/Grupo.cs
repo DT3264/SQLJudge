@@ -15,7 +15,7 @@ namespace SQL_Judge.BD
 
         public int IdGrupo { get; set; }
         public string Nombre { get; set; }
-        public int Docente { get; set; }
+        public int IdDocente { get; set; }
         public string CodigoClase { get; set; }
 
         public virtual Usuario DocenteNavigation { get; set; }
