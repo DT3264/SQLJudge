@@ -165,6 +165,11 @@ class NavMenu extends Component {
               </li>
             </ul>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/lista-grupos">
+              Ver grupos
+            </Link>
+          </li>
         </ul>
       );
     }

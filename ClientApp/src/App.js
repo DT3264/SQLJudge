@@ -19,58 +19,44 @@ import ListadoProblemas from "./components/ListadoProblemas.js";
 import ActualizarProblema from "./components/ActualizarProblema.js";
 import Redaccion from "./components/Redaccion.js";
 import DetalleProblemasAlumno from "./components/DetalleProblemasAlumno.js";
+import ListaGrupos from "./components/grupos/ListaGrupos.js";
 
 import Envios from "./components/Envios.js";
 import GenerarScoreboard from "./components/GenerarScoreboard.js";
 import Scoreboard from "./components/Scoreboard.js";
 import ListaAlumnos from "./components/ListaAlumnos.js";
 
-
 export default class App extends Component {
-    static displayName = App.name;
+  static displayName = App.name;
 
-    render() {
-        return (
-            <Layout>
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route path="/counter" component={Counter} />
-                    <Route path="/fetch-data" component={FetchData} />
-                    <Route path="/notFound" component={PageNotFound} />
-                    <Route
-                        path="/generar-codigos"
-                        component={GenerarCodigoRegistro}
-                    />
-                    <Route
-                        path="/envios/alumno/:id"
-                        component={DetalleProblemasAlumno}
-                    />
-                    <Route path="/login" component={Login} />
-                    <Route path="/registro" component={Registro} />
-                    <Route path="/lista-usuarios" component={ListaUsuarios} />
-                    <Route path="/lista-alumnos" component={ListaAlumnos} />
-                    <Route path="/problemset" component={Problemset} />
-                    <Route path="/problem/:id" component={VistaProblema} />
-                    <Route path="/crear-problema" component={CrearProblema} />
-                    <Route path="/envios/:id" component={Envios} />
-                    <Route
-                        path="/lista-problemas"
-                        component={ListadoProblemas}
-                    />
-                    <Route
-                        path="/actualizar-problema"
-                        component={ActualizarProblema}
-                    />
-                    <Route path="/redaccion" component={Redaccion} />
-                    
-                    <Route
-                        path="/generar-reporte"
-                        component={GenerarScoreboard}
-                    />
-                    <Route path="/scoreboard" component={Scoreboard} />
-                    <Route path="*" component={PageNotFound} />
-                </Switch>
-            </Layout>
-        );
-    }
+  render() {
+    return (
+      <Layout>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/counter" component={Counter} />
+          <Route path="/fetch-data" component={FetchData} />
+          <Route path="/notFound" component={PageNotFound} />
+          <Route path="/generar-codigos" component={GenerarCodigoRegistro} />
+          <Route path="/envios/alumno/:id" component={DetalleProblemasAlumno} />
+          <Route path="/login" component={Login} />
+          <Route path="/registro" component={Registro} />
+          <Route path="/lista-usuarios" component={ListaUsuarios} />
+          <Route path="/lista-alumnos" component={ListaAlumnos} />
+          <Route path="/problemset" component={Problemset} />
+          <Route path="/problem/:id" component={VistaProblema} />
+          <Route path="/crear-problema" component={CrearProblema} />
+          <Route path="/envios/:id" component={Envios} />
+          <Route path="/lista-problemas" component={ListadoProblemas} />
+          <Route path="/actualizar-problema" component={ActualizarProblema} />
+          <Route path="/redaccion" component={Redaccion} />
+          <Route path="/lista-grupos" component={ListaGrupos} />
+
+          <Route path="/generar-reporte" component={GenerarScoreboard} />
+          <Route path="/scoreboard" component={Scoreboard} />
+          <Route path="*" component={PageNotFound} />
+        </Switch>
+      </Layout>
+    );
+  }
 }
