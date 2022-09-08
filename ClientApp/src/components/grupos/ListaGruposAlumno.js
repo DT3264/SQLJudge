@@ -7,6 +7,20 @@ import withAuthAdmin from "./../DetalleProblemasAlumno";
 
 function ListaGruposAlumno() {
   const [state, setState] = useState({});
+  const [codigoClase, setcodigoClase] = useState("");
+
+  const eliminaGrupo = async (id) => {
+    var valueToken = "Bearer " + localStorage.getItem("token");
+    const headers = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: valueToken,
+      },
+    };
+    const response = await axios.delete(`/api/Grupos/${id}`, headers);
+    console.log(response);
+    populateData();
+  };
 
   const populateData = async () => {
     var valueToken = "Bearer " + localStorage.getItem("token");
@@ -18,6 +32,32 @@ function ListaGruposAlumno() {
       headers: headers,
     });
     setState({ grupos: respuesta.data });
+  };
+
+  const inscribirAGrupo = async () => {
+    console.log(codigoClase);
+    var valueToken = "Bearer " + localStorage.getItem("token");
+    console.log(valueToken);
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: valueToken,
+    };
+    const response = await axios.post(
+      "/api/Grupos/inscribirAGrupo",
+      { codigoClase: codigoClase },
+      {
+        headers: headers,
+      }
+    );
+    console.log(response);
+    setcodigoClase("");
+    populateData();
+  };
+
+  const handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.value;
+    setcodigoClase(value);
   };
 
   const ListaAMostrar = state?.grupos?.map((grupo) => {
@@ -53,6 +93,27 @@ function ListaGruposAlumno() {
       ></div>
 
       <div className="container">
+        <div className="row mb-1 justify-content-center">
+          <div className="d-grid col-3 mx-auto">
+            <input
+              placeholder="Codigo del grupo"
+              name="titulo"
+              className="form-control"
+              value={codigoClase}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className="row mb-1 justify-content-center">
+          <div className="d-grid col-3 mx-auto">
+            <button
+              className="btn mr-0 btn-success"
+              onClick={() => inscribirAGrupo()}
+            >
+              Inscribirse al grupo
+            </button>
+          </div>
+        </div>
         <div className="row">
           <div className="col-12">
             <table className="table table-bordered">

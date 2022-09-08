@@ -109,5 +109,36 @@ namespace SQL_Judge.Controllers
 
             return Ok(gruposInscritos);
         }
+
+        /// <summary>
+        /// Obtiene los grupos a los que pertenece el alumno
+        /// </summary>
+        /// <returns>Una lista incluyendo pares {id, nombre} de los grupos donde está inscrito el alumno</returns>
+        // GET: api/Grupos/obtenerGruposAlumno
+        [HttpPost("inscribirAGrupo")]
+        public async Task<ActionResult<Grupo>> InscribirAlumnoAGrupo(InscribirAGrupoRequest request)
+        {
+            var dbContext = new SQLJudgeContext();
+
+            var usuario = User.Identity.Name;
+            var idUsuario = (from u in dbContext.Usuarios
+                            where u.Usuario1 == usuario
+                            select u.IdUsuario).FirstOrDefault();
+            var idGrupo = (from grupos in dbContext.Grupos
+                        where grupos.CodigoClase == request.codigoClase
+                        select grupos.IdGrupo).FirstOrDefault();
+            if (idGrupo == default) return BadRequest("No existe grupo con ese código");
+
+            var registrosConMatch = from registro in dbContext.Registrogrupos where registro.IdGrupo == idGrupo && registro.IdUsuario == idUsuario select registro;
+            if (registrosConMatch.Count() > 0) return BadRequest("El alumno ya está inscrito en el grupo");
+
+            var nuevoRegistro = new Registrogrupo() { IdUsuario = idUsuario, IdGrupo = idGrupo };
+
+
+            dbContext.Registrogrupos.Add(nuevoRegistro);
+            await dbContext.SaveChangesAsync();
+
+            return Ok("Se registró el alumno correctamente");
+        }
     }
 }
